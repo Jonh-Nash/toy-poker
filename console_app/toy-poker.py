@@ -5,9 +5,9 @@ def bot_actions(bot_posi, BTN_card, BB_card):
         if BTN_card == "A":
             action = "bet"
         if BTN_card == "Q":
-            action = "check"
+            action = random.choice(["check", "bet"])
     if bot_posi == "BB":
-        action = "call"
+        action = random.choice(["call", "fold"])
 
     return action
 
@@ -15,10 +15,11 @@ def player_choise() :
     player_posi = input("Are you BTN or BB")
     return player_posi
 
-def cardDeal():
-    BTN_card = random.choice("AQ")
+def cardDeal(AQlist):
+    #BTN_card = random.choice(AQlist)
+    BTN_card = AQlist.pop()
     BB_card = "K"
-    return BTN_card, BB_card
+    return BTN_card, BB_card, AQlist
 
 def cardOpen(BTN_card, BB_card):
     card_rank = ["Q", "K", "A"]
@@ -70,7 +71,7 @@ def takeChipWinner(winner, player_posi, bet_history, player_win_money):
             else:
                 player_win_money -= 1
         elif bet_history == "fold":
-            player_win_money += 1
+            player_win_money -= 1
         elif bet_history == "call":
             if winner == "BB":
                 player_win_money += 3
@@ -81,13 +82,17 @@ def takeChipWinner(winner, player_posi, bet_history, player_win_money):
 def main():
     turn = 1
     player_win_money = 0
-    player_posi = "BTN"
-    bot_posi = "BB"
+    # decide position
+    player_posi = "BB"
+    bot_posi = "BTN"
+    # make card box
+    AQlist = ["A"] * 25 + ["Q"] * 25
+    random.shuffle(AQlist)
     #oponent_money = 10
     while(turn < 10):
         print('turn :', turn)
         # deal cards
-        BTN_card, BB_card = cardDeal()
+        BTN_card, BB_card, AQlist = cardDeal(AQlist)
         print("BTN card is " + BTN_card + "| BB card is " + BB_card)
 
         # decide bot action
