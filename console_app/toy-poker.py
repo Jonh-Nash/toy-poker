@@ -1,5 +1,16 @@
 import random
 
+def bot_actions(bot_posi, BTN_card, BB_card):
+    if bot_posi == "BTN":
+        if BTN_card == "A":
+            action = "bet"
+        if BTN_card == "Q":
+            action = "check"
+    if bot_posi == "BB":
+        action = "call"
+
+    return action
+
 def player_choise() :
     player_posi = input("Are you BTN or BB")
     return player_posi
@@ -19,13 +30,22 @@ def cardOpen(BTN_card, BB_card):
         winner = "BB"
     return winner
     
-def betChip(better):
+def betChip(better, player_posi, bot_action):
     if better == "BTN":
-        bet_history = input("BTN check or bet?:")
-        return bet_history
+        if player_posi == "BTN":
+            bet_history = input("BTN check or bet?:")
+            return bet_history
+        else:
+            bet_history = bot_action
+            return bet_history
     if better == "BB":
-        bet_history = input("BB fold or call?:")
-        return bet_history
+        if player_posi == "BB":
+            bet_history = input("BB call or fold?:")
+            return bet_history
+        else:
+            bet_history = bot_action
+            return bet_history
+
 
 def takeChipWinner(winner, player_posi, bet_history, player_win_money):
     # posi is BB
@@ -61,7 +81,8 @@ def takeChipWinner(winner, player_posi, bet_history, player_win_money):
 def main():
     turn = 1
     player_win_money = 0
-    player_posi = player_choise()
+    player_posi = "BTN"
+    bot_posi = "BB"
     #oponent_money = 10
     while(turn < 10):
         print('turn :', turn)
@@ -69,13 +90,19 @@ def main():
         BTN_card, BB_card = cardDeal()
         print("BTN card is " + BTN_card + "| BB card is " + BB_card)
 
+        # decide bot action
+        bot_action = bot_actions(bot_posi, BTN_card, BB_card)
+
         # BTN bets chip
         better = "BTN"
-        bet_history = betChip(better)
+        bet_history = betChip(better, player_posi, bot_action)
+        print("BTN " + bet_history)
         # BB bets chip
         if bet_history == "bet":
             better = "BB"
-            bet_history = betChip(better)
+            bet_history = betChip(better, player_posi, bot_action)
+            print("BB " + bet_history)
+        
 
         # decide a winner
         winner = cardOpen(BTN_card, BB_card)
