@@ -27,23 +27,41 @@ def betChip(better):
         bet_history = input("BB fold or call?:")
         return bet_history
 
-# ここを考えよう
-# 勝ったほうが、チップをもらえる。負けた方はチップが減る。
-# 自分のポジションがBTNのとき。checkORcallが起きて勝ったのがボタンなら増える。BBがfoldしたら増える。checkORcallが起きて負けたのなら減る。
-# 自分のポジションがBBのとき。checkORcallが起きて勝ったのがBBなら増える。foldしたら増える。checkORcallが起きて負けたのなら減る。
 def takeChipWinner(winner, player_posi, bet_history, player_win_money):
     # posi is BB
-    if bet_history == "check":
-        print(winner + " takes 1bb with ")
-    if bet_history == "fold":
-        print("BTN" + " takes 1bb with")
-    if bet_history == "call":
-        print(winner + " takes 3bb with")
+    if player_posi == "BTN":
+        if bet_history == "check":
+            if winner == "BTN":
+                player_win_money += 1
+            else:
+                player_win_money -= 1
+        elif bet_history == "fold":
+            player_win_money += 1
+        elif bet_history == "call":
+            if winner == "BTN":
+                player_win_money += 3
+            else:
+                player_win_money -= 3
+
+    if player_posi == "BB":
+        if bet_history == "check":
+            if winner == "BB":
+                player_win_money += 1
+            else:
+                player_win_money -= 1
+        elif bet_history == "fold":
+            player_win_money += 1
+        elif bet_history == "call":
+            if winner == "BB":
+                player_win_money += 3
+            else:
+                player_win_money -= 3
+    return player_win_money
 
 def main():
     turn = 1
     player_win_money = 0
-    player_posi = player_choice()
+    player_posi = player_choise()
     #oponent_money = 10
     while(turn < 10):
         print('turn :', turn)
@@ -63,10 +81,11 @@ def main():
         winner = cardOpen(BTN_card, BB_card)
 
         # winner take chips
-        takeChipWinner(winner,player_posi, bet_history, player_win_money)
+        player_win_money = takeChipWinner(winner,player_posi, bet_history, player_win_money)
 
         # turn end
         turn += 1
+        print("player_win_money is " + str(player_win_money))
         input('go to next')
     print('thank you')
 
