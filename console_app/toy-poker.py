@@ -1,5 +1,9 @@
 import random
 
+def player_choise() :
+    player_posi = input("Are you BTN or BB")
+    return player_posi
+
 def cardDeal():
     BTN_card = random.choice("AQ")
     BB_card = "K"
@@ -23,7 +27,12 @@ def betChip(better):
         bet_history = input("BB fold or call?:")
         return bet_history
 
-def takeChipWinner(winner, bet_history):
+# ここを考えよう
+# 勝ったほうが、チップをもらえる。負けた方はチップが減る。
+# 自分のポジションがBTNのとき。checkORcallが起きて勝ったのがボタンなら増える。BBがfoldしたら増える。checkORcallが起きて負けたのなら減る。
+# 自分のポジションがBBのとき。checkORcallが起きて勝ったのがBBなら増える。foldしたら増える。checkORcallが起きて負けたのなら減る。
+def takeChipWinner(winner, player_posi, bet_history, player_win_money):
+    # posi is BB
     if bet_history == "check":
         print(winner + " takes 1bb with ")
     if bet_history == "fold":
@@ -33,8 +42,9 @@ def takeChipWinner(winner, bet_history):
 
 def main():
     turn = 1
-    player_money = 10
-    oponent_money = 10
+    player_win_money = 0
+    player_posi = player_choice()
+    #oponent_money = 10
     while(turn < 10):
         print('turn :', turn)
         # deal cards
@@ -53,7 +63,7 @@ def main():
         winner = cardOpen(BTN_card, BB_card)
 
         # winner take chips
-        takeChipWinner(winner, bet_history)
+        takeChipWinner(winner,player_posi, bet_history, player_win_money)
 
         # turn end
         turn += 1
