@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>poker game</title>
+</head>
+<body>
+    <!-- メッセージと今の勝ち負け額の表示 -->
+    <p> あなたは後攻です </p>
+    <p> あなたの得点： {{ player_win_money }}</p>
+    <p> 今のターン： {{ turn }}</p>
+
+    <!-- BBのカード -->
+    <h2>あなたのカード</h2>
+    <ul>
+        {{ BB_card }}
+    </ul>
+
+    <!-- BTNのカード -->
+    <!-- 自分のカードじゃないときは消す処理 -->
+    <h2>対戦相手のカード</h2>
+    <ul>
+        {{ BTN_card}}
+    </ul>
+
+    <!-- アクションを選ぶ画面 -->
+    対戦相手のアクションは {{ bet_history }} です。
+
+    {% if bet_history != "check" %}
+    <form action="" method="POST"
+        {% csrf_token %}
+        <p>
+            <input type="radio" name="action" value="fold">フォールド
+            <input type="radio" name="action" value="call">コール
+        </p>
+
+    <p><input type="submit" value="送信"></p>
+    {% endif %}
+
+    <!-- カードを表示して得点を分配する画面 -->
+    あなたは、{{ }} ポイント 勝ちました。
+    あなたは、{{ }} ポイント 負けました。
+
+    {% if turn_flag %}
+    <!-- ここで「次へ」を押したらデータがデータベースに送信されて、画面がBTN（先攻）に遷移される -->
+    {% endif %}
+
+
+    </form>
+</body>
+</html>

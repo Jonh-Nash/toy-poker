@@ -90,6 +90,7 @@ def main():
     random.shuffle(AQlist)
     #oponent_money = 10
     while(turn < 10):
+        turn_flag = False
         print('turn :', turn)
         # deal cards
         BTN_card, BB_card, AQlist = cardDeal(AQlist)
@@ -118,6 +119,7 @@ def main():
         # turn end
         turn += 1
         print("player_win_money is " + str(player_win_money))
+        turn_flag = True
         input('go to next')
     print('thank you')
 
