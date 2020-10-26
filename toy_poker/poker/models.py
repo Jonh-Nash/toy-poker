@@ -1,3 +1,7 @@
 from django.db import models
 
-# Create your models here.
+# ユーザー名、ユーザーID、今の回数
+# を持つテーブルを作る
+
+# ユーザーID、ポジション、カード、アクション、今の勝ち負け額、回数
+# を持つテーブルを作る
