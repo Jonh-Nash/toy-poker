@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.shortcuts import redirect
+from .models import UserInfo
 
 def signupfunc(request):
     # actionで遷移先を空、つまり自ページにする。
@@ -16,6 +17,11 @@ def signupfunc(request):
             return render(request, 'signup.html', {'error': 'このユーザーは登録されています'})
         except:
             user = User.objects.create_user(username2, '', password2)
+
+            # make deck
+            deck = "AQ"
+            user_info = UserInfo(user=username2, turn=0, tokuten=0, deck=deck)
+            user_info.save()
             return render(request, 'signup.html', {'some': 200}) 
     return render(request, 'signup.html', {'some': 200}) 
 
@@ -34,6 +40,11 @@ def loginfunc(request):
 def pokerbtnfunc(request):
     #if request.method == 'POST':
         #if request.POST[''] == 'action':
+    user_info = UserInfo.objects.filter(user=request.user)
+    content = {
+        'turn' : user_info[0].turn,
+        'tokuten' : user_info[0].tokuten,
+    }
 
-    return render(request, 'poker_btn.html')
+    return render(request, 'poker_btn.html', content)
     
