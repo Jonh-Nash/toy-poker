@@ -27,7 +27,7 @@
     あなたのアクションです。
 
     {% if bet_history != "check" %}
-    <form action="" method="POST"
+    <form action="" method="POST">
         {% csrf_token %}
         <p>
             <input type="radio" name="action" value="check">チェック
@@ -42,8 +42,8 @@
     {% endif %}
 
     <!-- カードを表示して得点を分配する画面 -->
-    あなたは、{{ }} ポイント 勝ちました。
-    あなたは、{{ }} ポイント 負けました。
+    あなたは、{{ point }} ポイント 勝ちました。
+    あなたは、{{ point }} ポイント 負けました。
 
     {% if turn_flag %}
     <!-- ここで「次へ」を押したらデータがデータベースに送信されて、画面がBB（後攻）に移る -->

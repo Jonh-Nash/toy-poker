@@ -27,7 +27,7 @@
     対戦相手のアクションは {{ bet_history }} です。
 
     {% if bet_history != "check" %}
-    <form action="" method="POST"
+    <form action="" method="POST">
         {% csrf_token %}
         <p>
             <input type="radio" name="action" value="fold">フォールド
