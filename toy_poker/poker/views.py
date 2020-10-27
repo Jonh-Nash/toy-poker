@@ -7,9 +7,12 @@ def signupfunc(request):
     user2 = User.objects.get(username='sato')
     print(user2)
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        user = User.objects.create_user(username, '', password)
-        return render(request, 'signup.html', {'some': 200}) 
-
+        username2 = request.POST['username']
+        password2 = request.POST['password']
+        try:
+            User.objects.get(username=username2)
+            return render(request, 'signup.html', {'error': 'このユーザーは登録されています'})
+        except:
+            user = User.objects.create_user(username2, '', password2)
+            return render(request, 'signup.html', {'some': 200}) 
     return render(request, 'signup.html', {'some': 200}) 
