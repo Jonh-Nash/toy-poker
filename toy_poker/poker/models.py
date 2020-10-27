@@ -1,7 +1,17 @@
 from django.db import models
 
-# ユーザー名、ユーザーID、今の回数、カードの残り枚数j:
-# を持つテーブルを作る
+# ユーザー名、今のターン、得点、デッキ:
+class UserInfo(models.Model):
+    user = models.CharField(max_length=10)
+    turn = models.IntegerField()
+    tokuten = models.IntegerField()
+    deck = models.CharField(max_length=50)
 
-# ユーザーID、ポジション、カード、アクション、今の勝ち負け額、回数
-# を持つテーブルを作る
+# ユーザー名、ポジション、カード、アクション、得点、ターン
+class ActionHistory(models.Model):
+    user = models.CharField(max_length=10)
+    posi = models.CharField(max_length=10)
+    card = models.CharField(max_length=1)
+    action = models.CharField(max_length=10)
+    tokuten = models.IntegerField()
+    turn = models.IntegerField()

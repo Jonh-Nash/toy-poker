@@ -33,5 +33,7 @@ def loginfunc(request):
 
 def pokerbtnfunc(request):
     #if request.method == 'POST':
+        #if request.POST[''] == 'action':
+
     return render(request, 'poker_btn.html')
     
