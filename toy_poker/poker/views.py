@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.shortcuts import redirect
 from .models import UserInfo
+from django.contrib.auth.decorators import login_required
 
 def signupfunc(request):
     # actionで遷移先を空、つまり自ページにする。
@@ -37,11 +38,13 @@ def loginfunc(request):
             return redirect('login')
     return render(request, 'login.html')
 
+@login_required
 def pokerbtnfunc(request):
     #if request.method == 'POST':
         #if request.POST[''] == 'action':
     user_info = UserInfo.objects.filter(user=request.user)
     content = {
+        'user' : user_info[0].user,
         'turn' : user_info[0].turn,
         'tokuten' : user_info[0].tokuten,
     }
