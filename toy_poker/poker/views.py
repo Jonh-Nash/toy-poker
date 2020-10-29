@@ -4,12 +4,11 @@ from django.contrib.auth import authenticate, login
 from django.shortcuts import redirect
 from .models import UserInfo
 from django.contrib.auth.decorators import login_required
+import random
 
 def signupfunc(request):
     # actionで遷移先を空、つまり自ページにする。
     # 自分に送りつけてからページ遷移する処理をこちらで書く
-    user2 = User.objects.get(username='sato')
-    print(user2)
     if request.method == 'POST':
         username2 = request.POST['username']
         password2 = request.POST['password']
@@ -18,12 +17,14 @@ def signupfunc(request):
             return render(request, 'signup.html', {'error': 'このユーザーは登録されています'})
         except:
             user = User.objects.create_user(username2, '', password2)
-
             # make deck
-            deck = "AQ"
+            AQlist = ["A"] * 25 + ["Q"] * 25
+            random.shuffle(AQlist)
+            deck = "".join(AQlist)
             user_info = UserInfo(user=username2, turn=0, tokuten=0, deck=deck)
             user_info.save()
             return render(request, 'signup.html', {'some': 200}) 
+
     return render(request, 'signup.html', {'some': 200}) 
 
 def loginfunc(request):
