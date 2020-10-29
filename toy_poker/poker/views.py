@@ -41,14 +41,18 @@ def loginfunc(request):
 
 @login_required
 def pokerbtnfunc(request):
+    if request.method == 'GET':
+        user_info = UserInfo.objects.filter(user=request.user)
+        content = {
+            'user' : user_info[0].user,
+            'turn' : user_info[0].turn,
+            'tokuten' : user_info[0].tokuten,
+        }
+        return render(request, 'poker_btn.html', content)
     #if request.method == 'POST':
-        #if request.POST[''] == 'action':
-    user_info = UserInfo.objects.filter(user=request.user)
-    content = {
-        'user' : user_info[0].user,
-        'turn' : user_info[0].turn,
-        'tokuten' : user_info[0].tokuten,
-    }
-
-    return render(request, 'poker_btn.html', content)
+    # card_flagをTreuにする。
+    # カードを表示する。結果を表示する。次へボタンを表示する。
+    # 「次へ」が押されたら bbページに遷移する。
+    return render(request, 'poker_btn.html')
+    
     
