@@ -49,10 +49,47 @@ def pokerbtnfunc(request):
             'tokuten' : user_info[0].tokuten,
         }
         return render(request, 'poker_btn.html', content)
-    #if request.method == 'POST':
-    # card_flagをTreuにする。
-    # カードを表示する。結果を表示する。次へボタンを表示する。
-    # 「次へ」が押されたら bbページに遷移する。
+    if request.method == 'POST':
+        user_info = UserInfo.objects.filter(user=request.user)
+        # 対戦相手のアクション
+        bet_history = 'call'
+        card_flag = True
+        content = {
+            'user' : user_info[0].user,
+            'turn' : user_info[0].turn,
+            'tokuten' : user_info[0].tokuten,
+            'action' : request.POST['action'],
+            'bet_history': bet_history,
+            'card_flag': card_flag
+        }
+        return render(request, 'poker_btn.html', content)
+
     return render(request, 'poker_btn.html')
     
+@login_required
+def pokerbbfunc(request):
+    if request.method == 'GET':
+        user_info = UserInfo.objects.filter(user=request.user)
+        content = {
+            'user' : user_info[0].user,
+            'turn' : user_info[0].turn,
+            'tokuten' : user_info[0].tokuten,
+        }
+        return render(request, 'poker_bb.html', content)
+    if request.method == 'POST':
+        user_info = UserInfo.objects.filter(user=request.user)
+        # 対戦相手のアクション
+        bet_history = 'check'
+        card_flag = True
+        content = {
+            'user' : user_info[0].user,
+            'turn' : user_info[0].turn,
+            'tokuten' : user_info[0].tokuten,
+            'action' : request.POST['action'],
+            'bet_history': bet_history,
+            'card_flag': card_flag
+        }
+        return render(request, 'poker_bb.html', content)
+
+    return render(request, 'poker_btn.html')
     

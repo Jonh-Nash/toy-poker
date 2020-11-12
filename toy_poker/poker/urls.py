@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import signupfunc, loginfunc, pokerbtnfunc
+from .views import signupfunc, loginfunc, pokerbtnfunc, pokerbbfunc
 
 urlpatterns = [
     #path('', ),
@@ -7,4 +7,5 @@ urlpatterns = [
     path('signup/', signupfunc, name='signup'),
     path('login/', loginfunc, name='login'),
     path('poker_btn/', pokerbtnfunc, name='poker_btn'),
+    path('poker_bb/', pokerbbfunc, name='poker_bb'),
 ]

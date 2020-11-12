@@ -6,46 +6,51 @@
 </head>
 <body>
     <!-- メッセージと今の勝ち負け額の表示 -->
-    <p> {{ user }}さん、あなたは先行です </p>
+    <p> {{ user }}さん、あなたは後攻です </p>
     <p> あなたの得点： {{ tokuten }}</p>
     <p> 今のターン： {{ turn }}</p>
 
     <!-- BBのカード -->
+    <!-- 自分のカードじゃないときは消す処理 -->
+    <h2>対戦相手のカード</h2>
+    <ul>
+        {% if card_flag == True %}
+            {{ BTN_card }}
+        {% endif %}
+    </ul>
+
+    <!-- BTNのカード -->
     <h2>あなたのカード</h2>
     <ul>
         {{ BB_card }}
     </ul>
 
-    <!-- BTNのカード -->
-    <!-- 自分のカードじゃないときは消す処理 -->
-    <h2>対戦相手のカード</h2>
-    <ul>
-        {{ BTN_card}}
-    </ul>
 
-    <!-- アクションを選ぶ画面 -->
-    対戦相手のアクションは {{ bet_history }} です。
-
-    {% if bet_history != "check" %}
-    <form action="" method="POST">
-        {% csrf_token %}
-        <p>
-            <input type="radio" name="action" value="fold">フォールド
-            <input type="radio" name="action" value="call">コール
-        </p>
-
-    <p><input type="submit" value="送信"></p>
+    {% if card_flag != True %}
+    {% if action == "bet" %}
+        対戦相手のアクションは {{ bet_history }} です。
+        あなたのアクションです。
+        <form action="" method="POST">
+            {% csrf_token %}
+            <p>
+                <input type="radio" name="action" value="call">コール
+                <input type="radio" name="action" value="fold">フォールド
+            </p>
+            <p><input type="submit" value="送信"></p>
+    {% elif action == "check" %}
+        対戦相手のアクションは {{ action }} です。
+    {% endif %}
     {% endif %}
 
     <!-- カードを表示して得点を分配する画面 -->
-    あなたは、{{ }} ポイント 勝ちました。
-    あなたは、{{ }} ポイント 負けました。
-
-    {% if turn_flag %}
-    <!-- ここで「次へ」を押したらデータがデータベースに送信されて、画面がBTN（先攻）に遷移される -->
+    {% if card_flag == True %}
+        あなたは、{{ point }} ポイント 勝ちました。
+        あなたは、{{ point }} ポイント 負けました。
     {% endif %}
 
-
-    </form>
+    {% if card_flag == True %}
+    <!-- ここで「次へ」を押したらデータがデータベースに送信されて、画面がBB（後攻）に移る -->
+    <p><a href="../poker_btn">次へ</a></p>
+    {% endif %}
 </body>
 </html>
