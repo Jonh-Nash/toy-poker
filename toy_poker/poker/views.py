@@ -52,14 +52,14 @@ def pokerbtnfunc(request):
     if request.method == 'POST':
         user_info = UserInfo.objects.filter(user=request.user)
         # 対戦相手のアクション
-        bet_history = 'call'
+        action_opp = 'call'
         card_flag = True
         content = {
             'user' : user_info[0].user,
             'turn' : user_info[0].turn,
             'tokuten' : user_info[0].tokuten,
             'action' : request.POST['action'],
-            'bet_history': bet_history,
+            'action_opp': action_opp,
             'card_flag': card_flag
         }
         return render(request, 'poker_btn.html', content)
@@ -74,19 +74,18 @@ def pokerbbfunc(request):
             'user' : user_info[0].user,
             'turn' : user_info[0].turn,
             'tokuten' : user_info[0].tokuten,
+            'action_opp' : 'bet',
         }
         return render(request, 'poker_bb.html', content)
     if request.method == 'POST':
         user_info = UserInfo.objects.filter(user=request.user)
         # 対戦相手のアクション
-        bet_history = 'check'
         card_flag = True
         content = {
             'user' : user_info[0].user,
             'turn' : user_info[0].turn,
             'tokuten' : user_info[0].tokuten,
             'action' : request.POST['action'],
-            'bet_history': bet_history,
             'card_flag': card_flag
         }
         return render(request, 'poker_bb.html', content)

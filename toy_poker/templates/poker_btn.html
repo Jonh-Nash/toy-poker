@@ -6,18 +6,15 @@
 </head>
 <body>
     <!-- メッセージと今の勝ち負け額の表示 -->
-    <p> {{ user }}さん、あなたは先行です </p>
-    <p> あなたの得点： {{ tokuten }}</p>
-    <p> 今のターン： {{ turn }}</p>
-
-    <!-- BBのカード -->
-    <!-- 自分のカードじゃないときは消す処理 -->
-    <h2>対戦相手のカード</h2>
-    <ul>
-        {% if card_flag == True %}
-            {{ BB_card }}
-        {% endif %}
-    </ul>
+    {% if card_flag == True %}
+        <p>    {{ user }}さん、あなたは{{ point }}ポイント勝ちました。</p>
+        <p> あなたの得点： {{ tokuten }}</p>
+        <p> 今のターン： {{ turn }}</p>
+    {% else %}
+        <p> {{ user }}さん、あなたは後攻です </p>
+        <p> あなたの得点： {{ tokuten }}</p>
+        <p> 今のターン： {{ turn }}</p>
+    {% endif %}
 
     <!-- BTNのカード -->
     <h2>あなたのカード</h2>
@@ -25,6 +22,13 @@
         {{ BTN_card }}
     </ul>
 
+    <!-- BBのカード -->
+    <h2>対戦相手のカード</h2>
+    <ul>
+        {% if card_flag == True %}
+            {{ BB_card }}
+        {% endif %}
+    </ul>
 
     {% if card_flag != True %}
     あなたのアクションです。
@@ -40,20 +44,14 @@
 
     {% if action == "bet" %}
         あなたのアクションは {{ action }} です。
-        対戦相手のアクションは {{ bet_history }} です。
+        対戦相手のアクションは {{ action_opp }} です。
     {% elif action == "check" %}
         あなたのアクションは {{ action }} です。
     {% endif %}
 
-    <!-- カードを表示して得点を分配する画面 -->
-    {% if card_flag == True %}
-        あなたは、{{ point }} ポイント 勝ちました。
-        あなたは、{{ point }} ポイント 負けました。
-    {% endif %}
-
     {% if card_flag == True %}
     <!-- ここで「次へ」を押したらデータがデータベースに送信されて、画面がBB（後攻）に移る -->
-    <p><a href="../poker_bb">次へ</a></p>
+    <p><a href="../poker_bb">次のターンへ</a></p>
     {% endif %}
 </body>
 </html>
