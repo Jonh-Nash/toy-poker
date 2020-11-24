@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -25,14 +26,20 @@
     <!-- BTNのカード -->
     <h2>あなたのカード</h2>
     <ul>
-        {{ BTN_card }}
+        {% if player_card == "A" %}
+            <img src="{% static 'cards/D_01.png' %}">
+        {% else %}
+            <img src="{% static 'cards/D_12.png' %}">
+        {% endif %}
     </ul>
 
     <!-- BBのカード -->
     <h2>対戦相手のカード</h2>
     <ul>
         {% if card_flag == True %}
-            {{ BB_card }}
+            <img src="{% static 'cards/D_13.png' %}">
+        {% else %}
+            <img src="{% static 'cards/card_bk_red.png' %}">
         {% endif %}
     </ul>
 

@@ -142,9 +142,11 @@ def pokerbbfunc(request):
             'user' : user_info[0].user,
             'turn' : user_info[0].turn,
             'tokuten' : user_info[0].tokuten,
+            'player_card' : player_card,
             'action_opp' : 'bet',
         }
         return render(request, 'poker_bb.html', content)
+
     if request.method == 'POST':
         # 結果から獲得ポイントを出し、フラグを立てる
         action_player = request.POST['action']
@@ -156,7 +158,9 @@ def pokerbbfunc(request):
             'user' : user_info[0].user,
             'turn' : user_info[0].turn,
             'tokuten' : user_info[0].tokuten,
+            'player_card' : player_card,
             'action' : action_player,
+            'opp_care' : opp_card,
             'action_opp': action_opp,
             'card_flag': card_flag,
             'point' : point,
