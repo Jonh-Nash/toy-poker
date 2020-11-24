@@ -50,8 +50,8 @@
         <form action="" method="POST">
             {% csrf_token %}
             <p>
-                <input type="radio" name="action" value="call">コール
-                <input type="radio" name="action" value="fold">フォールド
+                <input type="radio" name="action" value="call" required>コール
+                <input type="radio" name="action" value="fold" required>フォールド
             </p>
             <p><input type="submit" value="送信"></p>
     {% elif action_opp == "check" %}

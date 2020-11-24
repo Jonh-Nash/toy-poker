@@ -48,8 +48,8 @@
     <form action="" method="POST">
         {% csrf_token %}
         <p>
-            <input type="radio" name="action" value="check">チェックをしてカードを開く
-            <input type="radio" name="action" value="bet">ベットをして掛け金を釣り上げる
+            <input type="radio" name="action" value="check" required>チェックをしてカードを開く
+            <input type="radio" name="action" value="bet" required>ベットをして掛け金を釣り上げる
         </p>
         <p><input type="submit" value="送信"></p>
     {% endif %}
