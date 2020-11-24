@@ -133,11 +133,11 @@ def pokerbtnfunc(request):
 @login_required
 def pokerbbfunc(request):
     # カードを配る
+    user_info = UserInfo.objects.filter(user=request.user)
     player_card = "K"
     opp_card = "A"
 
     if request.method == 'GET':
-        user_info = UserInfo.objects.filter(user=request.user)
         content = {
             'user' : user_info[0].user,
             'turn' : user_info[0].turn,
@@ -146,15 +146,20 @@ def pokerbbfunc(request):
         }
         return render(request, 'poker_bb.html', content)
     if request.method == 'POST':
-        user_info = UserInfo.objects.filter(user=request.user)
-        # 対戦相手のアクション
+        # 結果から獲得ポイントを出し、フラグを立てる
+        action_player = request.POST['action']
+        action_opp = bot_actions("BTN", opp_card, player_card)
+        winner = cardOpen(opp_card, player_card)
+        point = takeChipWinner(winner, "BB", action_player, action_opp)
         card_flag = True
         content = {
             'user' : user_info[0].user,
             'turn' : user_info[0].turn,
             'tokuten' : user_info[0].tokuten,
-            'action' : request.POST['action'],
-            'card_flag': card_flag
+            'action' : action_player,
+            'action_opp': action_opp,
+            'card_flag': card_flag,
+            'point' : point,
         }
         return render(request, 'poker_bb.html', content)
 

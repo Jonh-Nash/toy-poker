@@ -7,8 +7,14 @@
 <body>
     <!-- メッセージと今の勝ち負け額の表示 -->
     {% if card_flag == True %}
-        <p>    {{ user }}さん、あなたは{{ point }}ポイント勝ちました。</p>
-        <p> あなたの得点： {{ tokuten }}</p>
+        {% if action_opp == "bet" %}
+            対戦相手のアクションは {{ action_opp }} でした。
+            あなたのアクションは {{ action }} でした。
+        {% elif action_opp == "check" %}
+            対戦相手のアクションは {{ action_opp }} でした。
+        {% endif %}
+        <p>    {{ user }}さん、あなたは{{ point }}ポイント獲得しました。</p>
+        <p> あなたのチップ量： {{ tokuten }}</p>
         <p> 今のターン： {{ turn }}</p>
     {% else %}
         <p> {{ user }}さん、あなたは後攻です </p>
