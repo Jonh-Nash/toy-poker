@@ -6,6 +6,62 @@ from .models import UserInfo
 from django.contrib.auth.decorators import login_required
 import random
 
+def bot_actions(bot_posi, BTN_card, BB_card):
+    if bot_posi == "BTN":
+        if BTN_card == "A":
+            bot_action = "bet"
+        if BTN_card == "Q":
+            bot_action = random.choice(["check", "bet"])
+    if bot_posi == "BB":
+        bot_action = random.choice(["call", "fold"])
+
+    return bot_action
+
+def cardDeal(AQlist):
+    BTN_card = AQlist.pop()
+    BB_card = "K"
+    return BTN_card, BB_card, AQlist
+
+def takeChipWinner(winner, player_posi, action_player, action_opp):
+    # posi is BB
+    if player_posi == "BTN":
+        if action_player == "check":
+            if winner == "BTN":
+                return 1
+            else:
+                return -1
+        elif action_opp == "fold":
+            return 1
+        elif action_opp == "call":
+            if winner == "BTN":
+                return 3
+            else:
+             return -3
+
+    if player_posi == "BB":
+        if action_opp == "check":
+            if winner == "BB":
+                return 1
+            else:
+                return -1
+        elif action_player == "fold":
+            return -1
+        elif action_player == "call":
+            if winner == "BB":
+                return 3
+            else:
+                return -3
+
+def cardOpen(BTN_card, BB_card):
+    card_rank = ["Q", "K", "A"]
+    BTN_card_rank = card_rank.index(BTN_card)
+    BB_card_rank = card_rank.index(BB_card)
+    if BTN_card_rank > BB_card_rank:
+        winner = "BTN"
+    else:
+        winner = "BB"
+    return winner
+
 def signupfunc(request):
     # actionで遷移先を空、つまり自ページにする。
     # 自分に送りつけてからページ遷移する処理をこちらで書く
@@ -41,26 +97,34 @@ def loginfunc(request):
 
 @login_required
 def pokerbtnfunc(request):
+    user_info = UserInfo.objects.filter(user=request.user)
+    # カードを配る
+    opp_card = "K"
+    player_card = "Q"
+
     if request.method == 'GET':
-        user_info = UserInfo.objects.filter(user=request.user)
         content = {
             'user' : user_info[0].user,
             'turn' : user_info[0].turn,
             'tokuten' : user_info[0].tokuten,
         }
         return render(request, 'poker_btn.html', content)
+
     if request.method == 'POST':
-        user_info = UserInfo.objects.filter(user=request.user)
-        # 対戦相手のアクション
-        action_opp = 'call'
+        # 結果から獲得ポイントを出し、フラグを立てる
+        action_player = request.POST['action']
+        action_opp = bot_actions("BB", player_card, opp_card)
+        winner = cardOpen(player_card, opp_card)
+        point = takeChipWinner(winner, "BTN", action_player, action_opp)
         card_flag = True
         content = {
             'user' : user_info[0].user,
             'turn' : user_info[0].turn,
             'tokuten' : user_info[0].tokuten,
-            'action' : request.POST['action'],
+            'action' : action_player,
             'action_opp': action_opp,
-            'card_flag': card_flag
+            'card_flag': card_flag,
+            'point' : point,
         }
         return render(request, 'poker_btn.html', content)
 
@@ -68,6 +132,10 @@ def pokerbtnfunc(request):
     
 @login_required
 def pokerbbfunc(request):
+    # カードを配る
+    player_card = "K"
+    opp_card = "A"
+
     if request.method == 'GET':
         user_info = UserInfo.objects.filter(user=request.user)
         content = {
