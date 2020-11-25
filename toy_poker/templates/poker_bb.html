@@ -52,10 +52,18 @@
             <p>
                 <input type="radio" name="action" value="call" required>コール
                 <input type="radio" name="action" value="fold" required>フォールド
+                <input type="hidden" name="action_opp" value="{{ action_opp }}">
             </p>
             <p><input type="submit" value="送信"></p>
     {% elif action_opp == "check" %}
         対戦相手のアクションは {{ action_opp }} です。
+        <form action="" method="POST">
+            {% csrf_token %}
+            <p>
+                <input type="hidden" name="action_opp" value="{{ action_opp }}">
+                <input type="hidden" name="action" value="check">
+            </p>
+            <p><input type="submit" value="送信"></p>
     {% endif %}
     {% endif %}
 

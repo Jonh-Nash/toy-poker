@@ -120,6 +120,8 @@ def pokerbtnfunc(request):
         winner = cardOpen(player_card, opp_card)
         point = takeChipWinner(winner, "BTN", action_player, action_opp)
         card_flag = True
+        tokuten = tokuten + point
+        turn += 1
         content = {
             'user' : user_info[0].user,
             'turn' : turn,
@@ -160,9 +162,12 @@ def pokerbbfunc(request):
     if request.method == 'POST':
         # 結果から獲得ポイントを出し、フラグを立てる
         action_player = request.POST['action']
+        action_opp = request.POST['action_opp']
         winner = cardOpen(opp_card, player_card)
         point = takeChipWinner(winner, "BB", action_player, action_opp)
         card_flag = True
+        tokuten = tokuten + point
+        turn += 1
         content = {
             'user' : user_info[0].user,
             'turn' : turn,
