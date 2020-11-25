@@ -99,14 +99,17 @@ def loginfunc(request):
 def pokerbtnfunc(request):
     user_info = UserInfo.objects.filter(user=request.user)
     # カードを配る
-    opp_card = "K"
-    player_card = "Q"
+    AQlist = list(user_info[0].deck)
+    player_card, opp_card, AQlist = cardDeal(AQlist)
+    turn = user_info[0].turn
+    tokuten = user_info[0].tokuten
 
     if request.method == 'GET':
         content = {
             'user' : user_info[0].user,
-            'turn' : user_info[0].turn,
-            'tokuten' : user_info[0].tokuten,
+            'turn' : turn,
+            'tokuten' : tokuten,
+            'player_card' : player_card,
         }
         return render(request, 'poker_btn.html', content)
 
@@ -119,52 +122,59 @@ def pokerbtnfunc(request):
         card_flag = True
         content = {
             'user' : user_info[0].user,
-            'turn' : user_info[0].turn,
-            'tokuten' : user_info[0].tokuten,
+            'turn' : turn,
+            'tokuten' : tokuten,
+            'player_card' : player_card,
+            'opp_card' : opp_card,
             'action' : action_player,
             'action_opp': action_opp,
             'card_flag': card_flag,
             'point' : point,
         }
+        # DBに保存する
         return render(request, 'poker_btn.html', content)
 
     return render(request, 'poker_btn.html')
     
 @login_required
 def pokerbbfunc(request):
-    # カードを配る
     user_info = UserInfo.objects.filter(user=request.user)
-    player_card = "K"
-    opp_card = "A"
+    # カードを配る
+    AQlist = list(user_info[0].deck)
+    opp_card, player_card, AQlist = cardDeal(AQlist)
+    turn = user_info[0].turn
+    tokuten = user_info[0].tokuten
 
     if request.method == 'GET':
+        # action_oppをどうやって外に渡すか
+        action_opp = bot_actions("BTN", opp_card, player_card)
         content = {
             'user' : user_info[0].user,
-            'turn' : user_info[0].turn,
-            'tokuten' : user_info[0].tokuten,
+            'turn' : turn,
+            'tokuten' : tokuten,
             'player_card' : player_card,
-            'action_opp' : 'bet',
+            'action_opp' : action_opp,
         }
         return render(request, 'poker_bb.html', content)
 
     if request.method == 'POST':
         # 結果から獲得ポイントを出し、フラグを立てる
         action_player = request.POST['action']
-        action_opp = bot_actions("BTN", opp_card, player_card)
         winner = cardOpen(opp_card, player_card)
         point = takeChipWinner(winner, "BB", action_player, action_opp)
         card_flag = True
         content = {
             'user' : user_info[0].user,
-            'turn' : user_info[0].turn,
-            'tokuten' : user_info[0].tokuten,
+            'turn' : turn,
+            'tokuten' : tokuten,
             'player_card' : player_card,
+            'opp_card' : opp_card,
             'action' : action_player,
-            'opp_care' : opp_card,
             'action_opp': action_opp,
             'card_flag': card_flag,
             'point' : point,
         }
+        # DBに保存する
         return render(request, 'poker_bb.html', content)
 
     return render(request, 'poker_btn.html')
