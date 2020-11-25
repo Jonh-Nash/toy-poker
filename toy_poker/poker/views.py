@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.shortcuts import redirect
-from .models import UserInfo
+from .models import UserInfo, ActionHistory
 from django.contrib.auth.decorators import login_required
 import random
 
@@ -121,6 +121,10 @@ def pokerbtnfunc(request):
         winner = cardOpen(player_card, opp_card)
         point = takeChipWinner(winner, "BTN", action_player, action_opp)
         card_flag = True
+        # アクションヒストリーDBに保存する
+        action_history = ActionHistory(user=user, posi="BTN", card=player_card, action=action_player, tokuten=tokuten, turn=turn)
+        action_history.save()
+
         tokuten = tokuten + point
         content = {
             'user' : user,
@@ -136,7 +140,7 @@ def pokerbtnfunc(request):
         # もろもろの情報の更新をする
         deck = "".join(AQlist)
         turn += 1
-        # DBに保存する
+        # ユーザー情報DBに保存する
         user_info.user = user
         user_info.tokuten = tokuten
         user_info.deck = deck
@@ -174,6 +178,10 @@ def pokerbbfunc(request):
         winner = cardOpen(opp_card, player_card)
         point = takeChipWinner(winner, "BB", action_player, action_opp)
         card_flag = True
+        # アクションヒストリーDBに保存する
+        action_history = ActionHistory(user=user, posi="BB", card=player_card, action=action_player, tokuten=tokuten, turn=turn)
+        action_history.save()
+
         tokuten = tokuten + point
         content = {
             'user' : user,
