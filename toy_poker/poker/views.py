@@ -77,7 +77,7 @@ def signupfunc(request):
             AQlist = ["A"] * 25 + ["Q"] * 25
             random.shuffle(AQlist)
             deck = "".join(AQlist)
-            user_info = UserInfo(user=username2, turn=0, tokuten=0, deck=deck)
+            user_info = UserInfo(user=username2, turn=1, tokuten=100, deck=deck)
             user_info.save()
             return render(request, 'signup.html', {'some': 200}) 
 
@@ -97,16 +97,17 @@ def loginfunc(request):
 
 @login_required
 def pokerbtnfunc(request):
-    user_info = UserInfo.objects.filter(user=request.user)
+    user_info = UserInfo.objects.get(user=request.user)
     # カードを配る
-    AQlist = list(user_info[0].deck)
+    AQlist = list(user_info.deck)
     player_card, opp_card, AQlist = cardDeal(AQlist)
-    turn = user_info[0].turn
-    tokuten = user_info[0].tokuten
+    turn = user_info.turn
+    tokuten = user_info.tokuten
+    user = user_info.user
 
     if request.method == 'GET':
         content = {
-            'user' : user_info[0].user,
+            'user' : user,
             'turn' : turn,
             'tokuten' : tokuten,
             'player_card' : player_card,
@@ -121,9 +122,8 @@ def pokerbtnfunc(request):
         point = takeChipWinner(winner, "BTN", action_player, action_opp)
         card_flag = True
         tokuten = tokuten + point
-        turn += 1
         content = {
-            'user' : user_info[0].user,
+            'user' : user,
             'turn' : turn,
             'tokuten' : tokuten,
             'player_card' : player_card,
@@ -133,25 +133,33 @@ def pokerbtnfunc(request):
             'card_flag': card_flag,
             'point' : point,
         }
+        # もろもろの情報の更新をする
+        deck = "".join(AQlist)
+        turn += 1
         # DBに保存する
+        user_info.user = user
+        user_info.tokuten = tokuten
+        user_info.deck = deck
+        user_info.turn = turn
+        user_info.save()
         return render(request, 'poker_btn.html', content)
 
     return render(request, 'poker_btn.html')
     
 @login_required
 def pokerbbfunc(request):
-    user_info = UserInfo.objects.filter(user=request.user)
+    user_info = UserInfo.objects.get(user=request.user)
     # カードを配る
-    AQlist = list(user_info[0].deck)
+    AQlist = list(user_info.deck)
     opp_card, player_card, AQlist = cardDeal(AQlist)
-    turn = user_info[0].turn
-    tokuten = user_info[0].tokuten
+    turn = user_info.turn
+    tokuten = user_info.tokuten
+    user = user_info.user
 
     if request.method == 'GET':
-        # action_oppをどうやって外に渡すか
         action_opp = bot_actions("BTN", opp_card, player_card)
         content = {
-            'user' : user_info[0].user,
+            'user' : user,
             'turn' : turn,
             'tokuten' : tokuten,
             'player_card' : player_card,
@@ -167,9 +175,8 @@ def pokerbbfunc(request):
         point = takeChipWinner(winner, "BB", action_player, action_opp)
         card_flag = True
         tokuten = tokuten + point
-        turn += 1
         content = {
-            'user' : user_info[0].user,
+            'user' : user,
             'turn' : turn,
             'tokuten' : tokuten,
             'player_card' : player_card,
@@ -179,7 +186,15 @@ def pokerbbfunc(request):
             'card_flag': card_flag,
             'point' : point,
         }
+        # もろもろの情報の更新をする
+        deck = "".join(AQlist)
+        turn += 1
         # DBに保存する
+        user_info.user = user
+        user_info.tokuten = tokuten
+        user_info.deck = deck
+        user_info.turn = turn
+        user_info.save()
         return render(request, 'poker_bb.html', content)
 
     return render(request, 'poker_btn.html')
