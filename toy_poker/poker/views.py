@@ -105,6 +105,9 @@ def pokerbtnfunc(request):
     tokuten = user_info.tokuten
     user = user_info.user
 
+    if turn >= 51:
+        return render(request, 'logout.html')
+
     if request.method == 'GET':
         content = {
             'user' : user,
@@ -159,6 +162,9 @@ def pokerbbfunc(request):
     turn = user_info.turn
     tokuten = user_info.tokuten
     user = user_info.user
+    
+    if turn >= 51:
+        return render(request, 'logout.html')
 
     if request.method == 'GET':
         action_opp = bot_actions("BTN", opp_card, player_card)

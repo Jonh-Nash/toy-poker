@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<script type="text/javascript">
+<!--
+// 自ウインドウを警告（確認ダイアログ）なしに閉じる
+function winClose(){
+  open('about:blank', '_self').close();    //一度再表示してからClose
+}
+-->
+</script>
+
+<h1 class="h3 mb-3 font-weight-normal">ご参加ありがとうございました</h1>
+<form>
+<input type="button" value="このウィンドウを閉じる" onclick="window.winClose()">
+</form>
+
+{% endblock content %}
