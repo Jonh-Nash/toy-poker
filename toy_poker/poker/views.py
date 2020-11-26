@@ -213,3 +213,86 @@ def pokerbbfunc(request):
 
     return render(request, 'poker_btn.html')
     
+def trainbtnfunc(request):
+    # カードを配る
+    player_card = random.choice("AQ")
+    opp_card = "K"
+    turn = 1
+    tokuten = 100
+    user = "練習"
+
+    if request.method == 'GET':
+        content = {
+            'train' : "train",
+            'user' : user,
+            'turn' : turn,
+            'tokuten' : tokuten,
+            'player_card' : player_card,
+        }
+        return render(request, 'poker_btn.html', content)
+
+    if request.method == 'POST':
+        # 結果から獲得ポイントを出し、フラグを立てる
+        action_player = request.POST['action']
+        action_opp = bot_actions("BB", player_card, opp_card)
+        winner = cardOpen(player_card, opp_card)
+        point = takeChipWinner(winner, "BTN", action_player, action_opp)
+        card_flag = True
+
+        tokuten = tokuten + point
+        content = {
+            'train' : "train",
+            'user' : user,
+            'turn' : turn,
+            'tokuten' : tokuten,
+            'player_card' : player_card,
+            'opp_card' : opp_card,
+            'action' : action_player,
+            'action_opp': action_opp,
+            'card_flag': card_flag,
+            'point' : point,
+        }
+        return render(request, 'poker_btn.html', content)
+
+def trainbbfunc(request):
+    # カードを配る
+    player_card = "K"
+    opp_card = random.choice("AQ")
+    turn = 1
+    tokuten = 100
+    user = "練習"
+
+    if request.method == 'GET':
+        action_opp = bot_actions("BTN", opp_card, player_card)
+        content = {
+            'train' : "train",
+            'user' : user,
+            'turn' : turn,
+            'tokuten' : tokuten,
+            'player_card' : player_card,
+            'action_opp' : action_opp,
+        }
+        return render(request, 'poker_bb.html', content)
+
+    if request.method == 'POST':
+        # 結果から獲得ポイントを出し、フラグを立てる
+        action_player = request.POST['action']
+        action_opp = request.POST['action_opp']
+        winner = cardOpen(opp_card, player_card)
+        point = takeChipWinner(winner, "BB", action_player, action_opp)
+        card_flag = True
+
+        tokuten = tokuten + point
+        content = {
+            'train' : "train",
+            'user' : user,
+            'turn' : turn,
+            'tokuten' : tokuten,
+            'player_card' : player_card,
+            'opp_card' : opp_card,
+            'action' : action_player,
+            'action_opp': action_opp,
+            'card_flag': card_flag,
+            'point' : point,
+        }
+        return render(request, 'poker_bb.html', content)

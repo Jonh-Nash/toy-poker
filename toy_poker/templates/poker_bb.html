@@ -70,7 +70,16 @@
 
     {% if card_flag == True %}
     <!-- ここで「次へ」を押したらデータがデータベースに送信されて、画面がBB（後攻）に移る -->
-    <p><a href="../poker_btn">次のターンへ</a></p>
+        {% if train == "train" %}
+            <p><a href="../train_btn">次のターンへ</a></p>
+        {% else %}
+            <p><a href="../poker_btn">次のターンへ</a></p>
+        {% endif %}
     {% endif %}
+
+    {% if train == "train" %}
+    <p><a href="../poker_btn">練習を終える</a></p>
+    {% endif %}
+
 </body>
 </html>
