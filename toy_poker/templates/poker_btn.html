@@ -1,32 +1,20 @@
+{% extends 'table.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <title>poker game</title>
-</head>
-<body>
-    <!-- メッセージと今の勝ち負け額の表示 -->
+
+<!-- メッセージと今の勝ち負け額の表示 -->
+{% block msg %}
     {% if card_flag == True %}
         {{ msg }}
         <p> あなたのチップ量： {{ tokuten }}</p>
         <p> 今のターン： {{ turn }}</p>
     {% else %}
         {{ msg }}
-        <p> あなたの得点： {{ tokuten }}</p>
+        <p> あなたのチップ量： {{ tokuten }}</p>
         <p> 今のターン： {{ turn }}</p>
     {% endif %}
+{% endblock msg %}
 
-    <!-- BTNのカード -->
-    <h2>あなたのカード</h2>
-    <ul>
-        {% if player_card == "A" %}
-            <img src="{% static 'cards/D_01.png' %}">
-        {% else %}
-            <img src="{% static 'cards/D_12.png' %}">
-        {% endif %}
-    </ul>
-
+{% block bot %}
     <!-- BBのカード -->
     <h2>対戦相手のカード</h2>
     <ul>
@@ -36,7 +24,9 @@
             <img src="{% static 'cards/card_bk_red.png' %}">
         {% endif %}
     </ul>
+{% endblock bot %}
 
+{% block action %}
     {% if card_flag != True %}
     <form action="" method="POST">
         {% csrf_token %}
@@ -48,17 +38,28 @@
     {% endif %}
 
     {% if card_flag == True %}
-    <!-- ここで「次へ」を押したらデータがデータベースに送信されて、画面がBB（後攻）に移る -->
         {% if train == "train" %}
             <p><a href="../train_bb">次のターンへ</a></p>
         {% else %}
             <p><a href="../poker_bb">次のターンへ</a></p>
         {% endif %}
     {% endif %}
+{% endblock action %}
 
-    {% if train == "train" %}
-    <p><a href="../poker_btn">練習を終える</a></p>
-    {% endif %}
+{% block player %}
+    <!-- BTNのカード -->
+    <h2>あなたのカード</h2>
+    <ul>
+        {% if player_card == "A" %}
+            <img src="{% static 'cards/D_01.png' %}">
+        {% else %}
+            <img src="{% static 'cards/D_12.png' %}">
+        {% endif %}
+    </ul>
+{% endblock player %}
 
-</body>
-</html>
+{% block train %}
+{% if train == "train" %}
+<p><a href="../login">練習を終える</a></p>
+{% endif %}
+{% endblock train %}

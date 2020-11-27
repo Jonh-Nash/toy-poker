@@ -1,11 +1,7 @@
+{% extends 'table.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <title>poker game</title>
-</head>
-<body>
+
+{% block msg %}
     <!-- メッセージと今の勝ち負け額の表示 -->
     {% if card_flag == True %}
         {{ msg }}
@@ -13,10 +9,12 @@
         <p> 今のターン： {{ turn }}</p>
     {% else %}
         {{ msg }}
-        <p> あなたの得点： {{ tokuten }}</p>
+        <p> あなたのチップ量： {{ tokuten }}</p>
         <p> 今のターン： {{ turn }}</p>
     {% endif %}
+{% endblock msg %}
 
+{% block bot %}
     <!-- BTNのカード -->
     <h2>対戦相手のカード</h2>
     <ul>
@@ -30,17 +28,11 @@
             <img src="{% static 'cards/card_bk_red.png' %}">
         {% endif %}
     </ul>
+{% endblock bot %}
 
-    <!-- BBのカード -->
-    <h2>あなたのカード</h2>
-    <ul>
-        <img src="{% static 'cards/D_13.png' %}">
-    </ul>
-
+{% block action %}
     {% if card_flag != True %}
     {% if action_opp == "bet" %}
-        対戦相手のアクションは {{ action_opp }} です。
-        あなたのアクションです。
         <form action="" method="POST">
             {% csrf_token %}
             <p>
@@ -50,7 +42,6 @@
             </p>
             <p><input type="submit" value="送信"></p>
     {% elif action_opp == "check" %}
-        対戦相手のアクションは {{ action_opp }} です。
         <form action="" method="POST">
             {% csrf_token %}
             <p>
@@ -61,7 +52,6 @@
     {% endif %}
     {% endif %}
 
-
     {% if card_flag == True %}
     <!-- ここで「次へ」を押したらデータがデータベースに送信されて、画面がBB（後攻）に移る -->
         {% if train == "train" %}
@@ -70,10 +60,19 @@
             <p><a href="../poker_btn">次のターンへ</a></p>
         {% endif %}
     {% endif %}
+{% endblock action %}
 
+{% block player %}
+    <!-- BBのカード -->
+    <h2>あなたのカード</h2>
+    <ul>
+        <img src="{% static 'cards/D_13.png' %}">
+    </ul>
+{% endblock player %}
+
+{% block train %}
     {% if train == "train" %}
-    <p><a href="../poker_btn">練習を終える</a></p>
+    <p><a href="../login">練習を終える</a></p>
     {% endif %}
+{% endblock train %}
 
-</body>
-</html>
