@@ -109,8 +109,10 @@ def pokerbtnfunc(request):
         return render(request, 'logout.html')
 
     if request.method == 'GET':
+        msg = user + "さん、あなたは先攻です。アクションを選んで下さい。"
         content = {
             'user' : user,
+            'msg' : msg,
             'turn' : turn,
             'tokuten' : tokuten,
             'player_card' : player_card,
@@ -129,8 +131,10 @@ def pokerbtnfunc(request):
         action_history.save()
 
         tokuten = tokuten + point
+        msg = user + "さん、あなたは" + str(point) + "ポイント獲得しました。現在のチップ量は、" + str(tokuten) + "です。残りのターンは" + str(turn) + "です。次のターンへ進んでください。"
         content = {
             'user' : user,
+            'msg' : msg,
             'turn' : turn,
             'tokuten' : tokuten,
             'player_card' : player_card,
@@ -168,8 +172,13 @@ def pokerbbfunc(request):
 
     if request.method == 'GET':
         action_opp = bot_actions("BTN", opp_card, player_card)
+        if action_opp == "bet":
+            msg = user + "さん、あなたは後攻です。相手のアクションは、ベットです。アクションを選んで下さい。"
+        else :
+            msg = user + "さん、あなたは後攻です。相手のアクションは、チェックです。結果を見てください。"
         content = {
             'user' : user,
+            'msg' : msg,
             'turn' : turn,
             'tokuten' : tokuten,
             'player_card' : player_card,
@@ -189,8 +198,10 @@ def pokerbbfunc(request):
         action_history.save()
 
         tokuten = tokuten + point
+        msg = user + "さん、あなたは" + str(point) + "ポイント獲得しました。現在のチップ量は、" + str(tokuten) + "です。残りのターンは" + str(turn) + "です。次のターンへ進んでください。"
         content = {
             'user' : user,
+            'msg' : msg,
             'turn' : turn,
             'tokuten' : tokuten,
             'player_card' : player_card,
@@ -222,8 +233,10 @@ def trainbtnfunc(request):
     user = "練習"
 
     if request.method == 'GET':
+        msg = user + "さん、あなたは先攻です。アクションを選んで下さい。"
         content = {
             'train' : "train",
+            'msg' : msg,
             'user' : user,
             'turn' : turn,
             'tokuten' : tokuten,
@@ -240,9 +253,11 @@ def trainbtnfunc(request):
         card_flag = True
 
         tokuten = tokuten + point
+        msg = user + "さん、あなたは" + str(point) + "ポイント獲得しました。現在のチップ量は、" + str(tokuten) + "です。残りのターンは" + str(turn) + "です。次のターンへ進んでください。"
         content = {
             'train' : "train",
             'user' : user,
+            'msg' : msg,
             'turn' : turn,
             'tokuten' : tokuten,
             'player_card' : player_card,
@@ -264,9 +279,14 @@ def trainbbfunc(request):
 
     if request.method == 'GET':
         action_opp = bot_actions("BTN", opp_card, player_card)
+        if action_opp == "bet":
+            msg = user + "さん、あなたは後攻です。相手のアクションは、ベットです。アクションを選んで下さい。"
+        else:
+            msg = user + "さん、あなたは後攻です。相手のアクションは、チェックです。結果を見てください。"
         content = {
             'train' : "train",
             'user' : user,
+            'msg' : msg,
             'turn' : turn,
             'tokuten' : tokuten,
             'player_card' : player_card,
@@ -275,6 +295,7 @@ def trainbbfunc(request):
         return render(request, 'poker_bb.html', content)
 
     if request.method == 'POST':
+        msg = "a"
         # 結果から獲得ポイントを出し、フラグを立てる
         action_player = request.POST['action']
         action_opp = request.POST['action_opp']
@@ -283,9 +304,11 @@ def trainbbfunc(request):
         card_flag = True
 
         tokuten = tokuten + point
+        msg = user + "さん、あなたは" + str(point) + "ポイント獲得しました。現在のチップ量は、" + str(tokuten) + "です。残りのターンは" + str(turn) + "です。次のターンへ進んでください。"
         content = {
             'train' : "train",
             'user' : user,
+            'msg' : msg,
             'turn' : turn,
             'tokuten' : tokuten,
             'player_card' : player_card,
