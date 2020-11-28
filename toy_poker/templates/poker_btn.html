@@ -12,6 +12,14 @@
     {% endif %}
 {% endblock msg %}
 
+{% block bot_chip %}
+    {{ bot_chip }}
+{% endblock bot_chip %}
+
+{% block bot_point %}
+    {{ bot_point }}
+{% endblock bot_point %}
+
 {% block bot_card %}
     <!-- BBのカード -->
     {% if card_flag == True %}
@@ -20,6 +28,20 @@
         <img src="{% static 'cards/card_bk_red.png' %}">
     {% endif %}
 {% endblock bot_card %}
+
+{% block bot_action %}
+    {% if action != "check" %}
+        {% if bot_action != None %}
+            <div class="balloon2-left">
+            {{ bot_action }}
+            </div>
+        {% endif %}
+    {% endif %}
+{% endblock bot_action %}
+
+{% block pot %}
+    {{ pot }}
+{% endblock pot %}
 
 {% block action %}
     {% if card_flag != True %}
@@ -49,6 +71,14 @@
 {% endblock next_button %}
 
     <!-- BTNのカード -->
+{% block player_chip %}
+    {{ tokuten }}
+{% endblock player_chip %}
+
+{% block player_point %}
+    {{ player_point }}
+{% endblock player_point %}
+
 {% block player_card %}
 {% if player_card == "A" %}
         <img src="{% static 'cards/D_01.png' %}">
@@ -56,6 +86,14 @@
         <img src="{% static 'cards/D_12.png' %}">
     {% endif %}
 {% endblock player_card %}
+
+{% block player_action %}
+    {% if bot_action != None %}
+        <div class="balloon2-left">
+            {{ action }}
+        </div>
+    {% endif %}
+{% endblock player_action %}
 
 {% block train %}
 {% if train == "train" %}

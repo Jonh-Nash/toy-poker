@@ -5,12 +5,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
     <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
     <script src={% static 'js/bootstrap.js' %}></script>
     <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
-
-    {% block customcss %}
-    {% endblock customcss %}
 
     <title>Poker game!</title>
   </head>
@@ -45,22 +43,22 @@
                 {% endblock bot_chip %}
               </div>
             </div>
+            <div class="circle">
+               {% block bot_point %}
+               {% endblock bot_point %}
+            </div>
           </div>
           <div class="col-xs-8">
             <ul class="card">
               <li>
-                {% block bot_card %}
-                {% endblock bot_card %}
+              {% block bot_card %}
+              {% endblock bot_card %}
               </li>
               <li>
-                 チェック
-                 {% block bot_action %}
-                 {% endblock bot_action %}
-              </li>
-              <li>
-                  3Pointゲット
-                 {% block bot_point %}
-                 {% endblock bot_point %}
+                  <p>
+                  {% block bot_action %}
+                  {% endblock bot_action %}
+                  </p>
               </li>
             </ul>
           </div>
@@ -72,6 +70,8 @@
             <div class="panel panel-default">
               <div class="panel-heading">
                 ポット
+                {% block pot %}
+                {% endblock pot %}
               </div>
             </div>
           </div>
@@ -99,6 +99,10 @@
                 {% endblock player_chip %}
               </div>
             </div>
+            <div class="circle">
+               {% block player_point %}
+               {% endblock player_point %}
+            </div>
           </div>
           <div class="col-xs-8">
             <ul class="card">
@@ -107,15 +111,14 @@
                 {% endblock player_card %}
               </li>
               <li>
-                  3Pointゲット
-                  {% block player_point %}
-                  {% endblock player_point %}
+                  <p>
+                  {% block player_action %}
+                  {% endblock player_action %}
+                  </p>
               </li>
             </ul>
           </div>
-
         </div>
-
       </div>
     </div>
 

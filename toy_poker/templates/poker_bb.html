@@ -12,6 +12,14 @@
     {% endif %}
 {% endblock msg %}
 
+{% block bot_chip %}
+    {{ bot_chip }}
+{% endblock bot_chip %}
+
+{% block bot_point %}
+    {{ bot_point }}
+{% endblock bot_point %}
+
 {% block bot_card %}
     <!-- BTNのカード -->
     <ul>
@@ -27,9 +35,19 @@
     </ul>
 {% endblock bot_card %}
 
+{% block bot_action %}
+    <div class="balloon2-left">
+    {{ bot_action }}
+    </div>
+{% endblock bot_action %}
+
+{% block pot %}
+    {{ pot }}
+{% endblock pot %}
+
 {% block action %}
     {% if card_flag != True %}
-    {% if action_opp == "bet" %}
+    {% if bot_action == "bet" %}
         <form action="" method="POST">
             {% csrf_token %}
             <li>
@@ -38,15 +56,15 @@
             <li>
                 <input type="radio" name="action" value="fold" required>フォールドして諦める
             </li>
-                <input type="hidden" name="action_opp" value="{{ action_opp }}">
+                <input type="hidden" name="action_opp" value="{{ bot_action }}">
             <p>
                 <input type="submit" value="送信">
             </p>
-    {% elif action_opp == "check" %}
+    {% elif bot_action == "check" %}
         <form action="" method="POST">
             {% csrf_token %}
             <p>
-                <input type="hidden" name="action_opp" value="{{ action_opp }}">
+                <input type="hidden" name="action_opp" value="{{ bot_action }}">
                 <input type="hidden" name="action" value="check">
             </p>
                 <p><input type="submit" value="送信"></p>
@@ -65,10 +83,28 @@
     {% endif %}
 {% endblock next_button %}
 
+{% block player_chip %}
+    {{ tokuten }}
+{% endblock player_chip %}
+
+{% block player_point %}
+    {{ player_point }}
+{% endblock player_point %}
+
 {% block player_card %}
     <!-- BBのカード -->
     <img src="{% static 'cards/D_13.png' %}">
 {% endblock player_card %}
+
+{% block player_action %}
+    {% if bot_action != "check" %}
+        {% if action != None %}
+        <div class="balloon2-left">
+        {{ action }}
+        </div>
+        {% endif %}
+    {% endif %}
+{% endblock player_action %}
 
 {% block train %}
     {% if train == "train" %}
