@@ -1,12 +1,13 @@
+{% load static %}
 <!doctype html>
 <html lang="ja">
   <head>
-    <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+    <script src={% static 'js/bootstrap.js' %}></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
 
     {% block customcss %}
     {% endblock customcss %}
@@ -14,26 +15,112 @@
     <title>Poker game!</title>
   </head>
   <body>
+    <nav class="navbar navbar-inverse">
+    </nav>
 
-    {% block msg %}
-    {% endblock msg %}
+    <div class="msg">
+      <div class="panel panel-default">
+        <div class="panel panel-body">
+          <b>
+          {% block msg %}
+          {% endblock msg %}
+          </b>
+        </div>
+      </div>
+    </div>
 
-    {% block bot %}
-    {% endblock bot %}
+    <div style="background-image: url({% static 'python_bk_s_new.png' %});
+                background-repeat: no-repeat;
+                background-position: 12px 2px;">
+      <div class="container">
+        <div class="row">
+          <div class="col-xs-3">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                対戦相手
+              </div>
+              <div class="panel-body">
+                チップ量
+                {% block bot_chip %}
+                {% endblock bot_chip %}
+              </div>
+            </div>
+          </div>
+          <div class="col-xs-8">
+            <ul class="card">
+              <li>
+                {% block bot_card %}
+                {% endblock bot_card %}
+              </li>
+              <li>
+                 チェック
+                 {% block bot_action %}
+                 {% endblock bot_action %}
+              </li>
+              <li>
+                  3Pointゲット
+                 {% block bot_point %}
+                 {% endblock bot_point %}
+              </li>
+            </ul>
+          </div>
 
-    {% block action %}
-    {% endblock action %}
+        </div>
 
-    {% block player %}
-    {% endblock player %}
+        <div class="row">
+          <div class="col-xs-3">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                ポット
+              </div>
+            </div>
+          </div>
+          <div class="col-xs-7">
+            <ul class="card">
+              {% block action %}
+              {% endblock action %}
+            </ul>
+          {% block next_button %}
+          {% endblock next_button %}
+          </div>
+          <div class="col-xs-3">
+          </div>
+        </div>
 
-    {% block train %}
-    {% endblock train %}
+        <div class="row">
+          <div class="col-xs-3">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                プレイヤー
+              </div>
+              <div class="panel-body">
+                チップ量
+                {% block player_chip %}
+                {% endblock player_chip %}
+              </div>
+            </div>
+          </div>
+          <div class="col-xs-8">
+            <ul class="card">
+              <li>
+                {% block player_card %}
+                {% endblock player_card %}
+              </li>
+              <li>
+                  3Pointゲット
+                  {% block player_point %}
+                  {% endblock player_point %}
+              </li>
+            </ul>
+          </div>
 
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+        </div>
+
+      </div>
+    </div>
+
+      {% block train %}
+      {% endblock train %}
+
   </body>
 </html>

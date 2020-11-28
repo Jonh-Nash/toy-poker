@@ -5,61 +5,60 @@
 {% block msg %}
     {% if card_flag == True %}
         {{ msg }}
-        <p> あなたのチップ量： {{ tokuten }}</p>
         <p> 今のターン： {{ turn }}</p>
     {% else %}
         {{ msg }}
-        <p> あなたのチップ量： {{ tokuten }}</p>
         <p> 今のターン： {{ turn }}</p>
     {% endif %}
 {% endblock msg %}
 
-{% block bot %}
+{% block bot_card %}
     <!-- BBのカード -->
-    <h2>対戦相手のカード</h2>
-    <ul>
-        {% if card_flag == True %}
-            <img src="{% static 'cards/D_13.png' %}">
-        {% else %}
-            <img src="{% static 'cards/card_bk_red.png' %}">
-        {% endif %}
-    </ul>
-{% endblock bot %}
+    {% if card_flag == True %}
+        <img src="{% static 'cards/D_13.png' %}">
+    {% else %}
+        <img src="{% static 'cards/card_bk_red.png' %}">
+    {% endif %}
+{% endblock bot_card %}
 
 {% block action %}
     {% if card_flag != True %}
     <form action="" method="POST">
         {% csrf_token %}
-        <p>
-            <input type="radio" name="action" value="check" required>チェックをしてカードを開く
-            <input type="radio" name="action" value="bet" required>ベットをして掛け金を釣り上げる
-        </p>
-        <p><input type="submit" value="送信"></p>
-    {% endif %}
-
-    {% if card_flag == True %}
-        {% if train == "train" %}
-            <p><a href="../train_bb">次のターンへ</a></p>
-        {% else %}
-            <p><a href="../poker_bb">次のターンへ</a></p>
-        {% endif %}
+            <li>
+                <input type="radio" name="action" value="check" required>チェックをしてカードを開く
+            </li>
+            <li>
+                <input type="radio" name="action" value="bet" required>２ポイントベットをして掛け金を釣り上げる
+            </li>
+                <input type="hidden" name="player_card" value="{{ player_card }}">
+            <p>
+                <input type="submit" value="送信">
+            </p>
     {% endif %}
 {% endblock action %}
 
-{% block player %}
-    <!-- BTNのカード -->
-    <h2>あなたのカード</h2>
-    <ul>
-        {% if player_card == "A" %}
-            <img src="{% static 'cards/D_01.png' %}">
+{% block next_button %}
+    {% if card_flag == True %}
+        {% if train == "train" %}
+            <p><a class="btn btn-primary" href="../train_bb">次のターンへ</a></p>
         {% else %}
-            <img src="{% static 'cards/D_12.png' %}">
+            <p><a class="btn btn-primary" href="../poker_bb">次のターンへ</a></p>
         {% endif %}
-    </ul>
-{% endblock player %}
+    {% endif %}
+{% endblock next_button %}
+
+    <!-- BTNのカード -->
+{% block player_card %}
+{% if player_card == "A" %}
+        <img src="{% static 'cards/D_01.png' %}">
+    {% else %}
+        <img src="{% static 'cards/D_12.png' %}">
+    {% endif %}
+{% endblock player_card %}
 
 {% block train %}
 {% if train == "train" %}
-<p><a href="../login">練習を終える</a></p>
+<p><a class="btn btn-outline-primary" href="../login">練習を終える</a></p>
 {% endif %}
 {% endblock train %}

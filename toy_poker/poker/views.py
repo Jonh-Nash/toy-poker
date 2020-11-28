@@ -241,11 +241,14 @@ def trainbtnfunc(request):
             'turn' : turn,
             'tokuten' : tokuten,
             'player_card' : player_card,
+            'opp_card' : opp_card,
         }
         return render(request, 'poker_btn.html', content)
 
     if request.method == 'POST':
         # 結果から獲得ポイントを出し、フラグを立てる
+        player_card = request.POST['player_card']
+
         action_player = request.POST['action']
         action_opp = bot_actions("BB", player_card, opp_card)
         winner = cardOpen(player_card, opp_card)

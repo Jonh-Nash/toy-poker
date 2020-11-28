@@ -5,18 +5,15 @@
     <!-- メッセージと今の勝ち負け額の表示 -->
     {% if card_flag == True %}
         {{ msg }}
-        <p> あなたのチップ量： {{ tokuten }}</p>
         <p> 今のターン： {{ turn }}</p>
     {% else %}
         {{ msg }}
-        <p> あなたのチップ量： {{ tokuten }}</p>
         <p> 今のターン： {{ turn }}</p>
     {% endif %}
 {% endblock msg %}
 
-{% block bot %}
+{% block bot_card %}
     <!-- BTNのカード -->
-    <h2>対戦相手のカード</h2>
     <ul>
         {% if card_flag == True %}
             {% if opp_card == "A" %}
@@ -28,19 +25,23 @@
             <img src="{% static 'cards/card_bk_red.png' %}">
         {% endif %}
     </ul>
-{% endblock bot %}
+{% endblock bot_card %}
 
 {% block action %}
     {% if card_flag != True %}
     {% if action_opp == "bet" %}
         <form action="" method="POST">
             {% csrf_token %}
-            <p>
-                <input type="radio" name="action" value="call" required>コール
-                <input type="radio" name="action" value="fold" required>フォールド
+            <li>
+                <input type="radio" name="action" value="call" required>コールをして勝負する
+            </li>
+            <li>
+                <input type="radio" name="action" value="fold" required>フォールドして諦める
+            </li>
                 <input type="hidden" name="action_opp" value="{{ action_opp }}">
+            <p>
+                <input type="submit" value="送信">
             </p>
-            <p><input type="submit" value="送信"></p>
     {% elif action_opp == "check" %}
         <form action="" method="POST">
             {% csrf_token %}
@@ -48,31 +49,30 @@
                 <input type="hidden" name="action_opp" value="{{ action_opp }}">
                 <input type="hidden" name="action" value="check">
             </p>
-            <p><input type="submit" value="送信"></p>
+                <p><input type="submit" value="送信"></p>
     {% endif %}
-    {% endif %}
-
-    {% if card_flag == True %}
-    <!-- ここで「次へ」を押したらデータがデータベースに送信されて、画面がBB（後攻）に移る -->
-        {% if train == "train" %}
-            <p><a href="../train_btn">次のターンへ</a></p>
-        {% else %}
-            <p><a href="../poker_btn">次のターンへ</a></p>
-        {% endif %}
     {% endif %}
 {% endblock action %}
 
-{% block player %}
+{% block next_button %}
+    {% if card_flag == True %}
+    <!-- ここで「次へ」を押したらデータがデータベースに送信されて、画面がBB（後攻）に移る -->
+        {% if train == "train" %}
+            <p><a class="btn btn-primary" href="../train_btn">次のターンへ</a></p>
+        {% else %}
+            <p><a class="btn btn-primary" href="../poker_btn">次のターンへ</a></p>
+        {% endif %}
+    {% endif %}
+{% endblock next_button %}
+
+{% block player_card %}
     <!-- BBのカード -->
-    <h2>あなたのカード</h2>
-    <ul>
-        <img src="{% static 'cards/D_13.png' %}">
-    </ul>
-{% endblock player %}
+    <img src="{% static 'cards/D_13.png' %}">
+{% endblock player_card %}
 
 {% block train %}
     {% if train == "train" %}
-    <p><a href="../login">練習を終える</a></p>
+    <p><a class="btn btn-outline-primary" href="../login">練習を終える</a></p>
     {% endif %}
 {% endblock train %}
 
