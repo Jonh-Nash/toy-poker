@@ -74,9 +74,13 @@ def signupfunc(request):
         except:
             user = User.objects.create_user(username2, '', password2)
             # make deck
-            AQlist = ["A"] * 25 + ["Q"] * 25
+            AQlist = ["A"] * 10 + ["Q"] * 10
             random.shuffle(AQlist)
-            deck = "".join(AQlist)
+            deck1 = "".join(AQlist)
+            AQlist2 = ["A"] * 10 + ["Q"] * 10
+            random.shuffle(AQlist2)
+            deck2 = "".join(AQlist2)
+            deck = deck1 + deck2
             user_info = UserInfo(user=username2, turn=1, tokuten=100, deck=deck)
             user_info.save()
             return render(request, 'signup.html', {'some': 200}) 
@@ -105,13 +109,17 @@ def pokerbtnfunc(request):
     tokuten = user_info.tokuten
     user = user_info.user
 
-    if turn >= 101:
+    if turn >= 81:
         return render(request, 'logout.html')
+
+    if turn >= 41:
+        bot_senryaku = "対戦相手は、Kを持っている時、50%の確率でコールして50%の確率でフォールドしています。"
 
     if request.method == 'GET':
         msg = user + "さん、あなたは先攻です。現在のチップ量は" + str(tokuten) + "です。アクションを選んで下さい。"
         content = {
             'msg' : msg,
+            'bot_senryaku' : bot_senryaku,
             'user' : user,
             'turn' : turn,
             'tokuten' : tokuten - 1,
@@ -174,8 +182,11 @@ def pokerbbfunc(request):
     tokuten = user_info.tokuten
     user = user_info.user
     
-    if turn >= 101:
+    if turn >= 81:
         return render(request, 'logout.html')
+
+    if turn >= 41:
+        bot_senryaku = "対戦相手は、Aを持っている時、100%の確率でベットします。Qを持っているとき、50%の確率でベットして50%の確率でチェックします。"
 
     if request.method == 'GET':
         action_opp = bot_actions("BTN", opp_card, player_card)
@@ -185,6 +196,7 @@ def pokerbbfunc(request):
             msg = user + "さん、あなたは後攻です。現在のチップ量は" + str(tokuten) + "です。相手のアクションは、チェックです。結果を見てください。"
         content = {
             'user' : user,
+            'bot_senryaku' : bot_senryaku,
             'msg' : msg,
             'turn' : turn,
             'player_card' : player_card,
