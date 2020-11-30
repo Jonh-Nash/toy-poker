@@ -93,8 +93,13 @@ def loginfunc(request):
         password2 = request.POST['password']
         user = authenticate(request, username=username2, password=password2)
         if user is not None:
+            user_info = UserInfo.objects.get(user=request.user)
+            turn = user_info.turn
             login(request, user)
-            return redirect('poker_btn')
+            if turn % 2 == 0:
+                return redirect('poker_bb')
+            else:
+                return redirect('poker_btn')
         else:
             return redirect('login')
     return render(request, 'login.html')
