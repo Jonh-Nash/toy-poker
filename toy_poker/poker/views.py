@@ -114,6 +114,8 @@ def pokerbtnfunc(request):
 
     if turn >= 41:
         bot_senryaku = "対戦相手は、Kを持っている時、50%の確率でコールして50%の確率でフォールドしています。"
+    else:
+        bot_senryaku = ""
 
     if request.method == 'GET':
         msg = user + "さん、あなたは先攻です。現在のチップ量は" + str(tokuten) + "です。アクションを選んで下さい。"
@@ -187,6 +189,8 @@ def pokerbbfunc(request):
 
     if turn >= 41:
         bot_senryaku = "対戦相手は、Aを持っている時、100%の確率でベットします。Qを持っているとき、50%の確率でベットして50%の確率でチェックします。"
+    else:
+        bot_senryaku = ""
 
     if request.method == 'GET':
         action_opp = bot_actions("BTN", opp_card, player_card)
