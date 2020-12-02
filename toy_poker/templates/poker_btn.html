@@ -49,10 +49,10 @@
     <form action="" method="POST">
         {% csrf_token %}
             <li>
-                <input type="radio" name="action" value="check" required>チェックをしてカードを開く
+                <input type="radio" name="action" value="check" required>チェック(勝負を終える)
             </li>
             <li>
-                <input type="radio" name="action" value="bet" required>２ポイントベットをして掛け金を釣り上げる
+                <input type="radio" name="action" value="bet" required>ベット(2ポイント)
             </li>
                 <input type="hidden" name="player_card" value="{{ player_card }}">
             <p>

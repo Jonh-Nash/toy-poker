@@ -52,10 +52,10 @@
         <form action="" method="POST">
             {% csrf_token %}
             <li>
-                <input type="radio" name="action" value="call" required>コールをして勝負する
+                <input type="radio" name="action" value="call" required>コール
             </li>
             <li>
-                <input type="radio" name="action" value="fold" required>フォールドして諦める
+                <input type="radio" name="action" value="fold" required>フォールド(降りる)
             </li>
                 <input type="hidden" name="action_opp" value="{{ bot_action }}">
             <p>
