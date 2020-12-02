@@ -74,10 +74,10 @@ def signupfunc(request):
         except:
             user = User.objects.create_user(username2, '', password2)
             # make deck
-            AQlist = ["A"] * 10 + ["Q"] * 10
+            AQlist = ["AA"] * 10 + ["QQ"] * 10
             random.shuffle(AQlist)
             deck1 = "".join(AQlist)
-            AQlist2 = ["A"] * 10 + ["Q"] * 10
+            AQlist2 = ["AA"] * 10 + ["QQ"] * 10
             random.shuffle(AQlist2)
             deck2 = "".join(AQlist2)
             deck = deck1 + deck2
