@@ -6,21 +6,32 @@ from .models import UserInfo, ActionHistory
 from django.contrib.auth.decorators import login_required
 import random
 
-def bot_actions(bot_posi, BTN_card, BB_card):
+def bot_actions(bot_posi, bot_deck):
     if bot_posi == "BTN":
-        if BTN_card == "A":
+        cb = bot_deck.pop()
+        if cb == "c":
+            bot_action = "check"
+            return bot_action, bot_deck
+        if cb == "b":
             bot_action = "bet"
-        if BTN_card == "Q":
-            bot_action = random.choice(["check", "bet"])
+            return bot_action, bot_deck
+        return bot_action, bot_deck
     if bot_posi == "BB":
         bot_action = random.choice(["call", "fold"])
-
-    return bot_action
+        return bot_action, bot_deck
 
 def cardDeal(AQlist):
-    BTN_card = AQlist.pop()
+    try:
+        BTN_card = AQlist.pop()
+    except IndexError:
+        BTN_card = "error"
     BB_card = "K"
     return BTN_card, BB_card, AQlist
+
+def cardDeal_bot(bot_deck):
+    BTN_card = bot_deck.pop()
+    BB_card = "K"
+    return BTN_card, BB_card, bot_deck
 
 def takeChipWinner(winner, player_posi, action_player, action_opp):
     # posi is BB
@@ -74,14 +85,23 @@ def signupfunc(request):
         except:
             user = User.objects.create_user(username2, '', password2)
             # make deck
-            AQlist = ["AA"] * 10 + ["QQ"] * 10
+            AQlist = ["A"] * 10 + ["Q"] * 10
             random.shuffle(AQlist)
             deck1 = "".join(AQlist)
-            AQlist2 = ["AA"] * 10 + ["QQ"] * 10
+            AQlist2 = ["A"] * 10 + ["Q"] * 10
             random.shuffle(AQlist2)
             deck2 = "".join(AQlist2)
             deck = deck1 + deck2
-            user_info = UserInfo(user=username2, turn=1, tokuten=100, deck=deck)
+            # make bot_deck
+            actionlist = ["cQ"] * 5 + ["bA"] * 10 + ["bQ"] * 5
+            random.shuffle(actionlist)
+            bot_deck1 = "".join(actionlist)
+            actionlist = ["cQ"] * 5 + ["bA"] * 10 + ["bQ"] * 5
+            random.shuffle(actionlist)
+            bot_deck2 = "".join(actionlist)
+            bot_deck = bot_deck1 + bot_deck2
+
+            user_info = UserInfo(user=username2, turn=1, tokuten=100, deck=deck, bot_deck=bot_deck)
             user_info.save()
             return render(request, 'signup.html', {'some': 200}) 
 
@@ -110,6 +130,10 @@ def pokerbtnfunc(request):
     # カードを配る
     AQlist = list(user_info.deck)
     player_card, opp_card, AQlist = cardDeal(AQlist)
+
+    if opp_card == "error":
+        return render(request, 'logout.html')
+
     turn = user_info.turn
     tokuten = user_info.tokuten
     user = user_info.user
@@ -141,7 +165,7 @@ def pokerbtnfunc(request):
     if request.method == 'POST':
         # 結果から獲得ポイントを出し、フラグを立てる
         action_player = request.POST['action']
-        action_opp = bot_actions("BB", player_card, opp_card)
+        action_opp, a = bot_actions("BB", "a")
         winner = cardOpen(player_card, opp_card)
         point = takeChipWinner(winner, "BTN", action_player, action_opp)
         card_flag = True
@@ -182,12 +206,14 @@ def pokerbtnfunc(request):
 @login_required
 def pokerbbfunc(request):
     user_info = UserInfo.objects.get(user=request.user)
+    bot_deck = list(user_info.bot_deck)
     # カードを配る
-    AQlist = list(user_info.deck)
-    opp_card, player_card, AQlist = cardDeal(AQlist)
+    opp_card, player_card, bot_deck = cardDeal_bot(bot_deck)
     turn = user_info.turn
     tokuten = user_info.tokuten
     user = user_info.user
+
+    action_opp, bot_deck = bot_actions("BTN", bot_deck)
     
     if turn >= 81:
         return render(request, 'logout.html')
@@ -198,7 +224,6 @@ def pokerbbfunc(request):
         bot_senryaku = ""
 
     if request.method == 'GET':
-        action_opp = bot_actions("BTN", opp_card, player_card)
         if action_opp == "bet":
             msg = user + "さん、あなたは後攻です。現在のチップ量は" + str(tokuten) + "です。相手のアクションは、ベットです。アクションを選んで下さい。"
         else :
@@ -247,12 +272,12 @@ def pokerbbfunc(request):
             'card_flag': card_flag,
         }
         # もろもろの情報の更新をする
-        deck = "".join(AQlist)
+        bot_deck = "".join(bot_deck)
         turn += 1
         # DBに保存する
         user_info.user = user
         user_info.tokuten = tokuten
-        user_info.deck = deck
+        user_info.bot_deck = bot_deck
         user_info.turn = turn
         user_info.save()
         return render(request, 'poker_bb.html', content)
@@ -289,7 +314,7 @@ def trainbtnfunc(request):
         player_card = request.POST['player_card']
 
         action_player = request.POST['action']
-        action_opp = bot_actions("BB", player_card, opp_card)
+        action_opp, a = bot_actions("BB", "a")
         winner = cardOpen(player_card, opp_card)
         point = takeChipWinner(winner, "BTN", action_player, action_opp)
         card_flag = True
@@ -323,7 +348,7 @@ def trainbbfunc(request):
     user = "練習"
 
     if request.method == 'GET':
-        action_opp = bot_actions("BTN", opp_card, player_card)
+        action_opp = random.choice(["bet", "check"])
         if action_opp == "bet":
             msg = user + "さん、あなたは後攻です。現在のチップ量は" + str(tokuten) + "です。相手のアクションは、ベットです。アクションを選んで下さい。"
         else:

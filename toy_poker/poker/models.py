@@ -6,6 +6,7 @@ class UserInfo(models.Model):
     turn = models.IntegerField()
     tokuten = models.IntegerField()
     deck = models.CharField(max_length=100)
+    bot_deck = models.CharField(max_length=200)
 
 # ユーザー名、ポジション、カード、アクション、得点、ターン
 class ActionHistory(models.Model):
