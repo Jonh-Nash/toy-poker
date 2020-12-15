@@ -151,7 +151,7 @@ def pokerbtnfunc(request):
     elif condition == "h":
         bot_senryaku = "対戦相手は、75%の確率でコールして25%の確率でフォールドします。"
     else:
-        bot_senryaku = ""
+        bot_senryaku = "なし"
 
     if request.method == 'GET':
         msg = user + "さん、あなたは先攻です。現在のチップ量は" + str(tokuten) + "です。アクションを選んで下さい。"
@@ -177,7 +177,7 @@ def pokerbtnfunc(request):
         point = takeChipWinner(winner, "BTN", action_player, action_opp)
         card_flag = True
         # アクションヒストリーDBに保存する
-        action_history = ActionHistory(user=user, posi="BTN", card=player_card, action=action_player, tokuten=tokuten, turn=turn)
+        action_history = ActionHistory(user=user, posi="BTN", card=player_card, action=action_player, tokuten=tokuten, turn=turn, condition=condition)
         action_history.save()
 
         tokuten = tokuten + point
@@ -232,7 +232,7 @@ def pokerbbfunc(request):
     elif condition == "h":
         bot_senryaku = "対戦相手は、Aを持っている時、100%の確率でベットします。Qを持っているとき、75%の確率でベットして25%の確率でチェックします。"
     else:
-        bot_senryaku = ""
+        bot_senryaku = "なし"
 
     if request.method == 'GET':
         if action_opp == "bet":
@@ -262,7 +262,7 @@ def pokerbbfunc(request):
         point = takeChipWinner(winner, "BB", action_player, action_opp)
         card_flag = True
         # アクションヒストリーDBに保存する
-        action_history = ActionHistory(user=user, posi="BB", card=player_card, action=action_player, tokuten=tokuten, turn=turn)
+        action_history = ActionHistory(user=user, posi="BB", card=player_card, action=action_player, tokuten=tokuten, turn=turn, condition=condition)
         action_history.save()
 
         tokuten = tokuten + point

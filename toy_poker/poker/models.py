@@ -16,3 +16,4 @@ class ActionHistory(models.Model):
     action = models.CharField(max_length=10)
     tokuten = models.IntegerField()
     turn = models.IntegerField()
+    condition = models.CharField(max_length=10)
