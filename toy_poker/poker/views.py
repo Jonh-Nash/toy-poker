@@ -23,15 +23,18 @@ def bot_actions(bot_posi, bot_deck):
 def cardDeal(AQlist):
     try:
         BTN_card = AQlist.pop()
+        condition = AQlist.pop()
     except IndexError:
         BTN_card = "error"
+        condition = "error"
     BB_card = "K"
-    return BTN_card, BB_card, AQlist
+    return BTN_card, BB_card, AQlist, condition
 
 def cardDeal_bot(bot_deck):
     BTN_card = bot_deck.pop()
+    condition = bot_deck.pop()
     BB_card = "K"
-    return BTN_card, BB_card, bot_deck
+    return BTN_card, BB_card, bot_deck, condition
 
 def takeChipWinner(winner, player_posi, action_player, action_opp):
     # posi is BB
@@ -85,21 +88,21 @@ def signupfunc(request):
         except:
             user = User.objects.create_user(username2, '', password2)
             # make deck
-            AQlist = ["A"] * 10 + ["Q"] * 10
+            AQlist_c = ["cA"] * 5 + ["cQ"] * 5 
+            AQlist_l = ["lA"] * 5 + ["lQ"] * 5 
+            AQlist_n = ["nA"] * 5 + ["nQ"] * 5 
+            AQlist_h = ["hA"] * 5 + ["hQ"] * 5 
+            AQlist = AQlist_c + AQlist_l + AQlist_n + AQlist_h
             random.shuffle(AQlist)
-            deck1 = "".join(AQlist)
-            AQlist2 = ["A"] * 10 + ["Q"] * 10
-            random.shuffle(AQlist2)
-            deck2 = "".join(AQlist2)
-            deck = deck1 + deck2
+            deck = "".join(AQlist)
             # make bot_deck
-            actionlist = ["cQ"] * 5 + ["bA"] * 10 + ["bQ"] * 5
+            actionlist_c = ["ccQ"] * 2 + ["bcA"] * 5 + ["bcQ"] * 3
+            actionlist_l = ["clQ"] * 2 + ["blA"] * 5 + ["blQ"] * 3
+            actionlist_n = ["cnQ"] * 2 + ["bnA"] * 5 + ["bnQ"] * 3
+            actionlist_h = ["chQ"] * 2 + ["bhA"] * 5 + ["bhQ"] * 3
+            actionlist = actionlist_c + actionlist_l + actionlist_n + actionlist_h
             random.shuffle(actionlist)
-            bot_deck1 = "".join(actionlist)
-            actionlist = ["cQ"] * 5 + ["bA"] * 10 + ["bQ"] * 5
-            random.shuffle(actionlist)
-            bot_deck2 = "".join(actionlist)
-            bot_deck = bot_deck1 + bot_deck2
+            bot_deck = "".join(actionlist)
 
             user_info = UserInfo(user=username2, turn=1, tokuten=100, deck=deck, bot_deck=bot_deck)
             user_info.save()
@@ -129,7 +132,7 @@ def pokerbtnfunc(request):
     user_info = UserInfo.objects.get(user=request.user)
     # カードを配る
     AQlist = list(user_info.deck)
-    player_card, opp_card, AQlist = cardDeal(AQlist)
+    player_card, opp_card, AQlist, condition = cardDeal(AQlist)
 
     if opp_card == "error":
         return render(request, 'logout.html')
@@ -141,8 +144,12 @@ def pokerbtnfunc(request):
     if turn >= 81:
         return render(request, 'logout.html')
 
-    if turn >= 41:
-        bot_senryaku = "対戦相手は、Kを持っている時、50%の確率でコールして50%の確率でフォールドしています。"
+    if condition == "n":
+        bot_senryaku = "対戦相手は、50%の確率でコールして50%の確率でフォールドします。"
+    elif condition == "l":
+        bot_senryaku = "対戦相手は、25%の確率でコールして75%の確率でフォールドします。"
+    elif condition == "h":
+        bot_senryaku = "対戦相手は、75%の確率でコールして25%の確率でフォールドします。"
     else:
         bot_senryaku = ""
 
@@ -208,7 +215,7 @@ def pokerbbfunc(request):
     user_info = UserInfo.objects.get(user=request.user)
     bot_deck = list(user_info.bot_deck)
     # カードを配る
-    opp_card, player_card, bot_deck = cardDeal_bot(bot_deck)
+    opp_card, player_card, bot_deck, condition = cardDeal_bot(bot_deck)
     turn = user_info.turn
     tokuten = user_info.tokuten
     user = user_info.user
@@ -218,8 +225,12 @@ def pokerbbfunc(request):
     if turn >= 81:
         return render(request, 'logout.html')
 
-    if turn >= 41:
+    if condition == "n":
         bot_senryaku = "対戦相手は、Aを持っている時、100%の確率でベットします。Qを持っているとき、50%の確率でベットして50%の確率でチェックします。"
+    elif condition == "l":
+        bot_senryaku = "対戦相手は、Aを持っている時、100%の確率でベットします。Qを持っているとき、25%の確率でベットして75%の確率でチェックします。"
+    elif condition == "h":
+        bot_senryaku = "対戦相手は、Aを持っている時、100%の確率でベットします。Qを持っているとき、75%の確率でベットして25%の確率でチェックします。"
     else:
         bot_senryaku = ""
 
