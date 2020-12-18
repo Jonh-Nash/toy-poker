@@ -116,7 +116,7 @@ def loginfunc(request):
         password2 = request.POST['password']
         user = authenticate(request, username=username2, password=password2)
         if user is not None:
-            user_info = UserInfo.objects.get(user=request.user)
+            user_info = UserInfo.objects.get(user=username2)
             turn = user_info.turn
             login(request, user)
             if turn % 2 == 0:
