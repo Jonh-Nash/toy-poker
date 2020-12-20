@@ -400,7 +400,7 @@ def trainbtnfunc(request):
     user = "練習"
 
     if request.method == 'GET':
-        msg = user + "さん、あなたは先攻です。現在のチップ量は" + str(tokuten) + "です。アクションを選んで下さい。"
+        msg = user + "さん、あなたは先攻です。アクションを選んで下さい。"
         content = {
             'train' : "train",
             'msg' : msg,
@@ -427,7 +427,7 @@ def trainbtnfunc(request):
         card_flag = True
 
         tokuten = tokuten + point
-        msg = user + "さん、あなたは" + str(point) + "ポイント獲得しました。現在のチップ量は、" + str(tokuten) + "です。残りのターンは" + str(100-turn) + "です。次のターンへ進んでください。"
+        msg = user + "さん、あなたは" + str(point) + "ポイント獲得しました。次のターンへ進んでください。"
         content = {
             'train' : "train",
             'user' : user,
@@ -457,9 +457,9 @@ def trainbbfunc(request):
     if request.method == 'GET':
         action_opp = random.choice(["bet", "check"])
         if action_opp == "bet":
-            msg = user + "さん、あなたは後攻です。現在のチップ量は" + str(tokuten) + "です。相手のアクションは、ベットです。アクションを選んで下さい。"
+            msg = user + "さん、あなたは後攻です。相手のアクションは、ベットです。アクションを選んで下さい。"
         else:
-            msg = user + "さん、あなたは後攻です。現在のチップ量は" + str(tokuten) + "です。相手のアクションは、チェックです。アクションを選んで下さい。"
+            msg = user + "さん、あなたは後攻です。相手のアクションは、チェックです。アクションを選んで下さい。"
         content = {
             'train' : "train",
             'user' : user,
@@ -485,7 +485,7 @@ def trainbbfunc(request):
         card_flag = True
 
         tokuten = tokuten + point
-        msg = user + "さん、あなたは" + str(point) + "ポイント獲得しました。現在のチップ量は、" + str(tokuten) + "です。残りのターンは" + str(100-turn) + "です。次のターンへ進んでください。"
+        msg = user + "さん、あなたは" + str(point) + "ポイント獲得しました。次のターンへ進んでください。"
         content = {
             'train' : "train",
             'user' : user,
