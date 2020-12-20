@@ -5,17 +5,11 @@
 {% block msg %}
     {% if card_flag == True %}
         {{ msg }}
-        <p> 今のターン： {{ turn }}</p>
     {% else %}
         {{ msg }}
-        <p> 今のターン： {{ turn }}</p>
         <p> 対戦相手の情報：{{ bot_senryaku }} </p>
     {% endif %}
 {% endblock msg %}
-
-{% block bot_chip %}
-    {{ bot_chip }}
-{% endblock bot_chip %}
 
 {% block bot_point %}
     {{ bot_point }}
@@ -72,9 +66,6 @@
 {% endblock next_button %}
 
     <!-- BTNのカード -->
-{% block player_chip %}
-    {{ tokuten }}
-{% endblock player_chip %}
 
 {% block player_point %}
     {{ player_point }}

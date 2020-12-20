@@ -99,11 +99,11 @@ def signupfunc(request):
             if username2[-1] == 1:
                 AQlist = AQlist_c + AQlist_l + AQlist_n + AQlist_h
             elif username2[-1] == 2:
-                AQlist = AQlist_c + AQlist_l + AQlist_n + AQlist_h
+                AQlist = AQlist_l + AQlist_c + AQlist_h + AQlist_n
             elif username2[-1] == 3:
-                AQlist = AQlist_c + AQlist_l + AQlist_n + AQlist_h
+                AQlist = AQlist_n + AQlist_h + AQlist_c + AQlist_l
             else:
-                AQlist = AQlist_c + AQlist_l + AQlist_n + AQlist_h
+                AQlist = AQlist_h + AQlist_n + AQlist_l + AQlist_c
             deck = "".join(AQlist)
             # make bot_deck
             actionlist_c = ["ccQ"] * 2 + ["bcA"] * 5 + ["bcQ"] * 3
@@ -117,11 +117,11 @@ def signupfunc(request):
             if username2[-1] == 1:
                 actionlist = actionlist_c + actionlist_l + actionlist_n + actionlist_h
             elif username2[-1] == 2:
-                actionlist = actionlist_c + actionlist_l + actionlist_n + actionlist_h
+                actionlist = actionlist_l + actionlist_c + actionlist_h + actionlist_n
             elif username2[-1] == 3:
-                actionlist = actionlist_c + actionlist_l + actionlist_n + actionlist_h
+                actionlist = actionlist_n + actionlist_h + actionlist_c + actionlist_l
             else:
-                actionlist = actionlist_c + actionlist_l + actionlist_n + actionlist_h
+                actionlist = actionlist_h + actionlist_n + actionlist_l + actionlist_c
             bot_deck = "".join(actionlist)
 
             user_info = UserInfo(user=username2, turn=1, tokuten=0, deck=deck, bot_deck=bot_deck)
@@ -151,6 +151,12 @@ def loginfunc(request):
 
 @login_required
 def whitefunc(request):
+
+    if request.method == 'POST':
+        post = True
+    else:
+        post = False
+    
     user_info = UserInfo.objects.get(user=request.user)
     turn = user_info.turn
     user = user_info.user
@@ -181,8 +187,8 @@ def whitefunc(request):
         koukou = "Kを持っているとき、75%の確率でコールして25%の確率でフォールドします。"
         senkou = "Aを持っている時、100%の確率でベットします。Qを持っているとき、75%の確率でベットして25%の確率でチェックします。"
     else:
-        koukou = "なし"
-        senkou = "なし"
+        koukou = "情報なし"
+        senkou = "情報なし"
 
     content = {
         'msg' : msg,
@@ -191,7 +197,7 @@ def whitefunc(request):
         'tokuten' : tokuten,
         'senkou' : senkou,
         'koukou' : koukou,
-        #'tokuten' : tokuten - 1,
+        'post' : post,
     }
     return render(request, 'white.html', content)
 
@@ -224,7 +230,7 @@ def pokerbtnfunc(request):
         bot_senryaku = "なし"
 
     if request.method == 'GET':
-        msg = user + "さん、あなたは先攻です。現在のチップ量は" + str(tokuten) + "です。アクションを選んで下さい。"
+        msg = user + "さん、あなたは先攻です。アクションを選んで下さい。"
         content = {
             'msg' : msg,
             'bot_senryaku' : bot_senryaku,
@@ -251,7 +257,7 @@ def pokerbtnfunc(request):
         action_history.save()
 
         tokuten = tokuten + point
-        msg = user + "さん、あなたは" + str(point) + "ポイント獲得しました。現在のチップ量は、" + str(tokuten) + "です。残りのターンは" + str(100-turn) + "です。次のターンへ進んでください。"
+        msg = user + "さん、あなたは" + str(point) + "ポイント獲得しました。次のターンへ進んでください。"
         content = {
             'user' : user,
             'msg' : msg,
@@ -306,9 +312,9 @@ def pokerbbfunc(request):
 
     if request.method == 'GET':
         if action_opp == "bet":
-            msg = user + "さん、あなたは後攻です。現在のチップ量は" + str(tokuten) + "です。相手のアクションは、ベットです。アクションを選んで下さい。"
+            msg = user + "さん、あなたは後攻です。相手のアクションは、ベットです。アクションを選んで下さい。"
         else :
-            msg = user + "さん、あなたは後攻です。現在のチップ量は" + str(tokuten) + "です。相手のアクションは、チェックです。結果を見てください。"
+            msg = user + "さん、あなたは後攻です。相手のアクションは、チェックです。結果を見てください。"
         content = {
             'user' : user,
             'bot_senryaku' : bot_senryaku,
@@ -336,7 +342,7 @@ def pokerbbfunc(request):
         action_history.save()
 
         tokuten = tokuten + point
-        msg = user + "さん、あなたは" + str(point) + "ポイント獲得しました。現在のチップ量は、" + str(tokuten) + "です。残りのターンは" + str(100-turn) + "です。次のターンへ進んでください。"
+        msg = user + "さん、あなたは" + str(point) + "ポイント獲得しました。次のターンへ進んでください。"
         content = {
             'user' : user,
             'msg' : msg,
