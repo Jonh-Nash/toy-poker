@@ -72,6 +72,8 @@
     <!-- ここで「次へ」を押したらデータがデータベースに送信されて、画面がBB（後攻）に移る -->
         {% if train == "train" %}
             <p><a class="btn btn-primary" href="../train_btn">次のターンへ</a></p>
+        {% elif turn == 20 or turn == 40 or turn == 60 or turn == 80 %}
+            <p><a class="btn btn-primary" href="../white">セッションを終える</a></p>
         {% else %}
             <p><a class="btn btn-primary" href="../poker_btn">次のターンへ</a></p>
         {% endif %}

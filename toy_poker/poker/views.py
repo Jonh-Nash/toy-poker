@@ -180,6 +180,9 @@ def whitefunc(request):
     elif turn == 81:
         msg = ""
         session = 4
+    else:
+        msg = "error"
+        session = "error"
 
     try:
         condition = koukou[-2]
@@ -377,15 +380,6 @@ def pokerbbfunc(request):
         user_info.bot_deck = bot_deck
         user_info.turn = turn
         user_info.save()
-
-        if turn == 21:
-            return redirect('white')
-        elif turn == 41:
-            return redirect('white')
-        elif turn == 61:
-            return redirect('white')
-        elif turn == 81:
-            return redirect('white')
 
         return render(request, 'poker_bb.html', content)
 
