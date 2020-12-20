@@ -89,22 +89,42 @@ def signupfunc(request):
             user = User.objects.create_user(username2, '', password2)
             # make deck
             AQlist_c = ["cA"] * 5 + ["cQ"] * 5 
+            random.shuffle(AQlist_c)
             AQlist_l = ["lA"] * 5 + ["lQ"] * 5 
+            random.shuffle(AQlist_l)
             AQlist_n = ["nA"] * 5 + ["nQ"] * 5 
+            random.shuffle(AQlist_n)
             AQlist_h = ["hA"] * 5 + ["hQ"] * 5 
-            AQlist = AQlist_c + AQlist_l + AQlist_n + AQlist_h
-            random.shuffle(AQlist)
+            random.shuffle(AQlist_h)
+            if username2[-1] == 1:
+                AQlist = AQlist_c + AQlist_l + AQlist_n + AQlist_h
+            elif username2[-1] == 2:
+                AQlist = AQlist_c + AQlist_l + AQlist_n + AQlist_h
+            elif username2[-1] == 3:
+                AQlist = AQlist_c + AQlist_l + AQlist_n + AQlist_h
+            else:
+                AQlist = AQlist_c + AQlist_l + AQlist_n + AQlist_h
             deck = "".join(AQlist)
             # make bot_deck
             actionlist_c = ["ccQ"] * 2 + ["bcA"] * 5 + ["bcQ"] * 3
+            random.shuffle(actionlist_c)
             actionlist_l = ["clQ"] * 2 + ["blA"] * 5 + ["blQ"] * 3
+            random.shuffle(actionlist_l)
             actionlist_n = ["cnQ"] * 2 + ["bnA"] * 5 + ["bnQ"] * 3
+            random.shuffle(actionlist_n)
             actionlist_h = ["chQ"] * 2 + ["bhA"] * 5 + ["bhQ"] * 3
-            actionlist = actionlist_c + actionlist_l + actionlist_n + actionlist_h
-            random.shuffle(actionlist)
+            random.shuffle(actionlist_h)
+            if username2[-1] == 1:
+                actionlist = actionlist_c + actionlist_l + actionlist_n + actionlist_h
+            elif username2[-1] == 2:
+                actionlist = actionlist_c + actionlist_l + actionlist_n + actionlist_h
+            elif username2[-1] == 3:
+                actionlist = actionlist_c + actionlist_l + actionlist_n + actionlist_h
+            else:
+                actionlist = actionlist_c + actionlist_l + actionlist_n + actionlist_h
             bot_deck = "".join(actionlist)
 
-            user_info = UserInfo(user=username2, turn=1, tokuten=100, deck=deck, bot_deck=bot_deck)
+            user_info = UserInfo(user=username2, turn=1, tokuten=0, deck=deck, bot_deck=bot_deck)
             user_info.save()
             return render(request, 'signup.html', {'some': 200}) 
 
@@ -119,13 +139,61 @@ def loginfunc(request):
             user_info = UserInfo.objects.get(user=username2)
             turn = user_info.turn
             login(request, user)
-            if turn % 2 == 0:
+            if turn == 1:
+                    return redirect('white')
+            elif turn % 2 == 0:
                 return redirect('poker_bb')
             else:
                 return redirect('poker_btn')
         else:
             return redirect('login')
     return render(request, 'login.html')
+
+@login_required
+def whitefunc(request):
+    user_info = UserInfo.objects.get(user=request.user)
+    turn = user_info.turn
+    user = user_info.user
+    tokuten = user_info.tokuten
+
+    koukou = user_info.deck
+    senkou = user_info.bot_deck
+
+    if turn == 1:
+        msg = "最初のセッションで、対戦相手は次の戦略を取ります。"
+    elif turn == 81:
+        msg = ""
+    else :
+        msg = "次のセッションで、対戦相手は次の戦略を取ります。"
+
+    try:
+        condition = koukou[-2]
+    except IndexError:
+        condition = "error"
+
+    if condition == "n":
+        koukou = "Kを持っている時、50%の確率でコールして50%の確率でフォールドします。"
+        senkou = "Aを持っている時、100%の確率でベットします。Qを持っているとき、50%の確率でベットして50%の確率でチェックします。"
+    elif condition == "l":
+        koukou = "Kを持っているとき、25%の確率でコールして75%の確率でフォールドします。"
+        senkou = "Aを持っている時、100%の確率でベットします。Qを持っているとき、25%の確率でベットして75%の確率でチェックします。"
+    elif condition == "h":
+        koukou = "Kを持っているとき、75%の確率でコールして25%の確率でフォールドします。"
+        senkou = "Aを持っている時、100%の確率でベットします。Qを持っているとき、75%の確率でベットして25%の確率でチェックします。"
+    else:
+        koukou = "なし"
+        senkou = "なし"
+
+    content = {
+        'msg' : msg,
+        'turn' : turn,
+        'user' : user,
+        'tokuten' : tokuten,
+        'senkou' : senkou,
+        'koukou' : koukou,
+        #'tokuten' : tokuten - 1,
+    }
+    return render(request, 'white.html', content)
 
 @login_required
 def pokerbtnfunc(request):
@@ -141,6 +209,8 @@ def pokerbtnfunc(request):
     tokuten = user_info.tokuten
     user = user_info.user
 
+    if turn == 21 or turn ==41 or turn == 61:
+        tokuten = 0
     if turn >= 81:
         return render(request, 'logout.html')
 
@@ -291,6 +361,16 @@ def pokerbbfunc(request):
         user_info.bot_deck = bot_deck
         user_info.turn = turn
         user_info.save()
+
+        if turn == 21:
+            return redirect('white')
+        elif turn == 41:
+            return redirect('white')
+        elif turn == 61:
+            return redirect('white')
+        elif turn == 81:
+            return redirect('white')
+
         return render(request, 'poker_bb.html', content)
 
     return render(request, 'poker_btn.html')

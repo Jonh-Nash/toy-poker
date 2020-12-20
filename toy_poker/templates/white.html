@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+<div class="main">
+{% block content %}
+
+{% if turn == 1 %}
+<h1>
+    実験を開始します。
+</h1>
+{% else %}
+<h1>
+    本セッションで獲得した得点は {{ tokuten }} 点でした。
+</h1>
+{% endif %}
+
+<h1>
+    {{ msg }}
+</h1>
+{% if turn != 81 %}
+<h2>
+    先攻時：{{ senkou }}
+</h2>
+<h2>
+    後攻時：{{ koukou }}
+</h2>
+{% endif %}
+
+{% if turn == 1 %}
+    <p><a class="btn btn-primary" href="../poker_btn">最初のセッションへ</a></p>
+{% elif turn == 81 %}
+    <p><a class="btn btn-primary" href="../poker_btn">終了する</a></p>
+{% else %}
+    <p><a class="btn btn-primary" href="../poker_btn">次のセッションへ</a></p>
+{% endif %}
+
+{% endblock content %}
+</div>
