@@ -96,11 +96,11 @@ def signupfunc(request):
             random.shuffle(AQlist_n)
             AQlist_h = ["hA"] * 5 + ["hQ"] * 5 
             random.shuffle(AQlist_h)
-            if username2[-1] == 1:
+            if username2[-1] == "1":
                 AQlist = AQlist_c + AQlist_l + AQlist_n + AQlist_h
-            elif username2[-1] == 2:
+            elif username2[-1] == "2":
                 AQlist = AQlist_l + AQlist_c + AQlist_h + AQlist_n
-            elif username2[-1] == 3:
+            elif username2[-1] == "3":
                 AQlist = AQlist_n + AQlist_h + AQlist_c + AQlist_l
             else:
                 AQlist = AQlist_h + AQlist_n + AQlist_l + AQlist_c
@@ -114,11 +114,11 @@ def signupfunc(request):
             random.shuffle(actionlist_n)
             actionlist_h = ["chQ"] * 2 + ["bhA"] * 5 + ["bhQ"] * 3
             random.shuffle(actionlist_h)
-            if username2[-1] == 1:
+            if username2[-1] == "1":
                 actionlist = actionlist_c + actionlist_l + actionlist_n + actionlist_h
-            elif username2[-1] == 2:
+            elif username2[-1] == "2":
                 actionlist = actionlist_l + actionlist_c + actionlist_h + actionlist_n
-            elif username2[-1] == 3:
+            elif username2[-1] == "3":
                 actionlist = actionlist_n + actionlist_h + actionlist_c + actionlist_l
             else:
                 actionlist = actionlist_h + actionlist_n + actionlist_l + actionlist_c
@@ -167,10 +167,19 @@ def whitefunc(request):
 
     if turn == 1:
         msg = "最初のセッションで、対戦相手は次の戦略を取ります。"
+        session = 0
+    elif turn == 21:
+        msg = "次のセッションで、対戦相手は次の戦略を取ります。"
+        session = 1
+    elif turn == 41:
+        msg = "次のセッションで、対戦相手は次の戦略を取ります。"
+        session = 2
+    elif turn == 61:
+        msg = "次のセッションで、対戦相手は次の戦略を取ります。"
+        session = 3
     elif turn == 81:
         msg = ""
-    else :
-        msg = "次のセッションで、対戦相手は次の戦略を取ります。"
+        session = 4
 
     try:
         condition = koukou[-2]
@@ -198,6 +207,7 @@ def whitefunc(request):
         'senkou' : senkou,
         'koukou' : koukou,
         'post' : post,
+        'session' : session,
     }
     return render(request, 'white.html', content)
 
